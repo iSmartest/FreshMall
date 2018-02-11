@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:padding="13dp">
+
+        <TextView
+            android:id="@+id/order_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="订单号：1001010"
+            android:textColor="@color/text_color_main"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/order_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未支付"
+            android:textColor="@color/wait_pay_color"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <ListView
+        android:id="@+id/commodity_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:scrollbars="none">
+    </ListView>
+    <include layout="@layout/v_horizontal_line" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:background="@color/app_main_default"
+        android:gravity="center|right"
+        android:orientation="horizontal"
+        android:paddingRight="13dp">
+
+        <TextView
+            android:id="@+id/bt_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_text_edit_corners"
+            android:gravity="center"
+            android:text="删除订单"
+            android:textColor="@color/text_color_default"
+            android:textSize="12sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/bt_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_go_pay_money"
+            android:gravity="center"
+            android:text="去支付"
+            android:textColor="@color/app_main_default"
+            android:textSize="12sp"
+            android:visibility="visible"
+            android:layout_marginLeft="14dp"/>
+    </LinearLayout>
+</LinearLayout>

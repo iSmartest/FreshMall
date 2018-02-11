@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_main_background">
+    <include layout="@layout/activity_base"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+    <EditText
+        android:id="@+id/edit_evaluate_dec"
+        android:textColor="@color/text_color_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_text_edit_no_corners"
+        android:gravity="left|top"
+        android:hint="@string/please_enter_your_evaluation"
+        android:layout_weight="1"
+        android:maxLines="12"
+        android:minLines="8"
+        android:textSize="14sp"
+        android:paddingLeft="10dp"
+        android:textColorHint="@color/edit_hint_color" />
+        <TextView
+            android:id="@+id/text_evaluate_submit"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/push_button"
+            android:layout_marginTop="50dp"
+            android:text="@string/submit"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="@color/app_main_default"/>
+    </LinearLayout>
+
+</LinearLayout>

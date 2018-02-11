@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_background">
+    <include layout="@layout/activity_base"/>
+    <com.example.xrecyclerview.XRecyclerView
+        android:id="@+id/search_list"
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+    </com.example.xrecyclerview.XRecyclerView>
+    <LinearLayout
+        android:id="@+id/linear_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/no_search_for_the_goods_you_want"
+            android:gravity="center"
+            android:textSize="16sp"/>
+    </LinearLayout>
+</LinearLayout>

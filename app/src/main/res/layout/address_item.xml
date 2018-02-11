@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_main_default"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/poiName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="龙旗购物中心"
+        android:textSize="14sp"
+        android:textColor="@color/text_color_default"
+        />
+
+    <TextView
+        android:id="@+id/poiAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="北京市昌平区黄平路19号院"
+        android:textSize="12sp"
+        android:textColor="@color/text_color_subtitle"/>
+</LinearLayout>

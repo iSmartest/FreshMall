@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_background">
+    <include layout="@layout/activity_base"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:padding="12dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="反馈标题："
+            android:textColor="@color/text_color_main"
+            android:textSize="15sp"/>
+        <EditText
+            android:id="@+id/edi_feedback_title"
+            android:textSize="13sp"
+            android:textColorHint="@color/edit_hint_color"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:gravity="center|left"
+            android:hint="输入反馈标题，如没时间"
+            android:textColor="@color/text_color_main"
+            android:background="@drawable/shape_text_edit_no_corners"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="反馈描述："
+            android:textColor="@color/text_color_main"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/edit_feedback_dec"
+            android:textColor="@color/text_color_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_text_edit_no_corners"
+            android:gravity="left|top"
+            android:hint="请输入您的反馈意见吧~"
+            android:layout_weight="1"
+            android:maxLines="12"
+            android:minLines="5"
+            android:textSize="14sp"
+            android:paddingLeft="10dp"
+            android:textColorHint="@color/edit_hint_color" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_feedback_submit"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/push_button"
+        android:layout_marginTop="50dp"
+        android:text="提交"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:textColor="@color/app_main_default"/>
+</LinearLayout>

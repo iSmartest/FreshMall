@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_background"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base" />
+
+    <RelativeLayout
+        android:id="@+id/linear_my_setting_about_us"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:maxEms="4"
+            android:text="@string/about_us"
+            android:textColor="@color/text_color_main"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </RelativeLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/linear_my_setting_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:maxEms="4"
+            android:text="@string/feedback"
+            android:textColor="@color/text_color_main"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/linear_my_setting_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:maxEms="4"
+            android:text="@string/user_protocol"
+            android:textColor="@color/text_color_main"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/linear_my_setting_update"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:maxEms="4"
+            android:text="@string/version_update"
+            android:textColor="@color/text_color_main"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <RelativeLayout
+        android:id="@+id/linear_my_setting_clear_cache"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/app_main_default"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/clear_cache"
+            android:textColor="@color/text_color_main"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/text_my_setting_clear_cache_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:textColor="@color/edit_hint_color"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/right_in"
+                android:contentDescription="@string/right_arrow"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+
+    <TextView
+        android:id="@+id/text_my_setting_log_out"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/sign_out"
+        android:textColor="@color/text_color_default"
+        android:textSize="17sp" />
+</LinearLayout>

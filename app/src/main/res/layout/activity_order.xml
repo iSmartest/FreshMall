@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/activity_base"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:background="@color/app_main_default"
+        android:paddingTop="8dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/text_wait_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="@string/mine_wait_pay"
+                android:visibility="visible"
+                android:textColor="@color/text_color_main" />
+            <View
+                android:id="@+id/cursor_0"
+                android:layout_width="30dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                android:background="@color/text_color_green"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/text_wait_goods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="@string/main_wait_goods"
+                android:visibility="visible"
+                android:textColor="@color/text_color_main" />
+            <View
+                android:id="@+id/cursor_1"
+                android:layout_width="30dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                android:background="@color/text_color_green"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/text_wait_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="@string/main_wait_send"
+                android:visibility="visible"
+                android:textColor="@color/text_color_main" />
+            <View
+                android:id="@+id/cursor_2"
+                android:layout_width="30dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                android:background="@color/text_color_green"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/text_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="@string/mine_completed"
+                android:visibility="visible"
+                android:textColor="@color/text_color_main" />
+            <View
+                android:id="@+id/cursor_3"
+                android:layout_width="30dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                android:background="@color/text_color_green"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/text_wait_refunds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="@string/mine_refund"
+                android:visibility="visible"
+                android:textColor="@color/text_color_main" />
+            <View
+                android:id="@+id/cursor_4"
+                android:layout_width="30dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/text_color_green"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.lixin.freshmall.view.LazyViewPager
+        android:id="@+id/vPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/app_main_default"
+        android:flipInterval="30"
+        android:persistentDrawingCache="animation" >
+    </com.lixin.freshmall.view.LazyViewPager>
+</LinearLayout>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_default"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_num"
+            android:textColor="@color/text_color_default"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edi_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="@string/please_enter_the_num_of_the_phone"
+            android:inputType="phone"
+            android:maxLength="11"
+            android:singleLine="true"
+            android:textColor="@color/text_color_default"
+            android:textColorHint="@color/edit_hint_color"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/verification_code"
+                    android:textColor="@color/text_color_default"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/edi_verification_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/please_enter_the_verification_code"
+                    android:inputType="phone"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color_default"
+                    android:textColorHint="@color/edit_hint_color"
+                    android:textCursorDrawable="@drawable/cursor_color"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_verification_code"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/shape_background_text"
+                android:text="@string/click_get"
+                android:textColor="@color/text_color_green"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:textColor="@color/text_color_default"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edi_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="@string/setting_six_password"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColor="@color/text_color_default"
+            android:textColorHint="@color/edit_hint_color"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_the_password"
+            android:textColor="@color/text_color_default"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edi_password_again"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="@string/again_edi_password"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColor="@color/text_color_default"
+            android:textColorHint="@color/edit_hint_color"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <Button
+        android:id="@+id/btn_fast_register"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/push_button"
+        android:gravity="center"
+        android:text="@string/login_and_bind"
+        android:textColor="@color/app_main_default"
+        android:textSize="16sp" />
+</LinearLayout>

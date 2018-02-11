@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_background"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/address_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/top">
+
+        <LinearLayout
+            android:id="@+id/ly_base_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/back_arrow"
+                android:padding="8dp"
+                android:src="@drawable/back_write" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ly_base_center"
+            android:layout_width="260dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:id="@+id/base_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_btn_search"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <EditText
+                    android:id="@+id/location_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center|left"
+                    android:hint="@string/please_enter_the_name_of_the_location"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:textColorHint="@color/edit_hint_color"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:id="@+id/im_search"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center|right"
+                    android:layout_marginRight="4dp"
+                    android:contentDescription="@string/search_icon"
+                    android:src="@drawable/base_search" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/edit_search_poi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ListView
+            android:id="@+id/edit_search_poi_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/divider_color"
+            android:dividerHeight="0.5dp"
+            android:scrollbars="none"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/address_MapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true" />
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/app_main_default"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_all_poi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/all_poi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="全部"
+                    android:textColor="@color/text_color_main"
+                    android:textSize="13dp" />
+
+                <View
+                    android:id="@+id/cursor_0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="3dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/text_color_green"
+                    android:visibility="visible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_build_poi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/build_poi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="写字楼"
+                    android:textColor="@color/text_color_main"
+                    android:textSize="13dp" />
+
+                <View
+                    android:id="@+id/cursor_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="3dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/text_color_green"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_plot_poi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/plot_poi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="小区"
+                    android:textColor="@color/text_color_main"
+                    android:textSize="13dp" />
+
+                <View
+                    android:id="@+id/cursor_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="3dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/text_color_green"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_school_poi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/school_poi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="学校"
+                    android:textColor="@color/text_color_main"
+                    android:textSize="13dp"
+                    android:visibility="visible" />
+
+                <View
+                    android:id="@+id/cursor_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="3dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/text_color_green"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <include layout="@layout/v_horizontal_line" />
+
+        <ListView
+            android:id="@+id/location_List"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:divider="@null">
+        </ListView>
+    </LinearLayout>
+
+
+</LinearLayout>

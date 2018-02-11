@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_background">
+    <!--修改昵称页面-->
+    <include layout="@layout/activity_base"/>
+    <LinearLayout
+        android:id="@+id/ll_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_title"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:background="@color/app_main_default"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nickname"
+            android:textColor="@color/text_color_main"
+            android:textSize="16sp"
+            />
+        <EditText
+            android:id="@+id/et_my_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:padding="5dp"
+            android:layout_marginLeft="5dp"
+            android:background="@null"
+            android:hint="@string/enter_your_nickname"
+            android:textColor="@color/text_color_main"
+            android:textColorHint="@color/edit_hint_color"
+            android:textSize="14sp"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/ll_name"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/push_button"
+        android:text="@string/make_sure"
+        android:textColor="@color/app_main_default"
+        android:textSize="14sp" />
+</LinearLayout>

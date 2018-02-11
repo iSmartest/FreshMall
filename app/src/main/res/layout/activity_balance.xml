@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_background">
+    <RelativeLayout
+        android:id="@+id/rl_balance_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:background="@drawable/my_wallet">
+
+        <RelativeLayout
+            android:id="@+id/ry_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true">
+
+                <LinearLayout
+                    android:id="@+id/ly_base_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_balance_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:src="@drawable/back_write"
+                        tools:ignore="ContentDescription" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxWidth="200dp"
+                    android:singleLine="true"
+                    android:text="@string/mine_wallet"
+                    android:textColor="@color/app_main_default"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_my_wallet_money_dec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/money_dec"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxWidth="200dp"
+                    android:singleLine="true"
+                    android:padding="8dp"
+                    android:textColor="@color/app_main_default"
+                    android:textSize="15sp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg02"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wallet_balance"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:textColor="@color/text_color_main"/>
+            <TextView
+                android:id="@+id/text_my_wallet_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="34sp"
+                android:gravity="center"
+                android:textColor="@color/text_color_main"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/linear_balance_recharge"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/recharge"
+            android:textSize="15sp"
+            android:textColor="@color/text_color_main"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow" />
+    </LinearLayout>
+    <include layout="@layout/v_horizontal_line"/>
+    <RelativeLayout
+        android:id="@+id/linear_balance_withdrawals"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/withdrawals"
+            android:textSize="15sp"
+            android:textColor="@color/text_color_main"
+            android:layout_alignParentLeft="true"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/right_arrow" />
+    </RelativeLayout>
+
+</LinearLayout>

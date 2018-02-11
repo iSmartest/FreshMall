@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_background">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/app_main_default"
+    android:padding="13dp">
+    <TextView
+        android:id="@+id/tv_item_class_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择呢"
+        android:textSize="14dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:textColor="@color/text_color_main"/>
+    <ImageView
+        android:id="@+id/im_item_class_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:src="@drawable/right_in" />
+</LinearLayout>
+    <include layout="@layout/v_horizontal_line"/>
+</LinearLayout>

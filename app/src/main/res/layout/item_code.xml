@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_margin="16dp"
+    android:background="@drawable/home01_bg_card"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/text_code_order_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="订单编号：2017120512032"
+        android:textColor="@color/text_color_main"
+        android:textSize="13sp"
+        android:padding="11dp"/>
+    <include layout="@layout/v_horizontal_line"/>
+    <ImageView
+        android:id="@+id/text_code"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        android:layout_marginTop="23dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:src="@drawable/i4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/text_code_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="9dp"
+            android:text="取货时间：2017-12-05  09:47"
+            android:textColor="@color/text_color_main"
+            android:textSize="11sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/text_code_time"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:visibility="gone">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/text_code_user_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/my_head_portrait" />
+            <TextView
+                android:id="@+id/text_code_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:maxLines="1"
+                android:text="xiao"
+                android:textColor="@color/code_name_color"
+                android:textSize="13sp" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/text_see_order_dec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="8dp"
+            android:maxLines="1"
+            android:text="订单详情>>"
+            android:textColor="@color/sku_stock_color"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</LinearLayout>

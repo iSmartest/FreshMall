@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/rl_code_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/top">
+
+        <TextView
+            android:id="@+id/tv_base_titleText"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxWidth="200dp"
+            android:singleLine="true"
+            android:text="@string/pick_up"
+            android:textColor="@color/app_main_default"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_yes_code"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/text_page_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color_main"
+            android:textSize="14sp"
+            android:paddingTop="13dp"/>
+        <com.lixin.freshmall.view.SwipeFlingAdapterView
+            android:id="@+id/swipe_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.85"
+            swipe:min_adapter_stack="4"
+            swipe:max_visible="4"
+            swipe:y_offset_step="28dp"/>
+        <!--<View-->
+            <!--android:id="@+id/anchor"-->
+            <!--android:layout_width="1dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_centerInParent="true"/>-->
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/text_no_code"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/empty_data"
+            android:visibility="visible"
+            android:contentDescription="@string/empty_icon"/>
+    </LinearLayout>
+</LinearLayout>

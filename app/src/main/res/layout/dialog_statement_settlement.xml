@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_default">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textSize="16dp"
+        android:textColor="@color/text_color_main"
+        android:text="结算说明"
+        android:gravity="center"/>
+    <include layout="@layout/v_horizontal_line"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/text_color_subtitle"
+            android:textSize="14dp"
+            android:lineSpacingExtra="5dp"
+            android:text="溜哒兔为顺应市场和客户需求,按每件商品的实际重量收费.即您按商品描述的标准重量预付商品金额,取菜时门店按商品的实际重量结算费用,如果您支付重量高于实际重量,差额会直接退回到您溜哒兔账户余额中;如果您支付对的重量低于实际重量,则有溜哒兔贴补差额,您不需要支付额外支付."/>
+
+</LinearLayout>

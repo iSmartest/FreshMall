@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_main_background"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base" />
+
+    <ListView
+        android:id="@+id/order_dec_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.85"
+        android:divider="@null"
+        android:scrollbars="none"></ListView>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:paddingTop="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_money"
+                android:textColor="@color/text_color_default"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/order_dec_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_price_color"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/order_dec_cancel"
+            android:layout_width="101dp"
+            android:layout_height="37dp"
+            android:background="@drawable/shape_text_edit_corners"
+            android:gravity="center"
+            android:text="@string/cancel_order"
+            android:textColor="@color/text_color_default"
+            android:textSize="15sp"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/order_dec_pay"
+            android:layout_width="101dp"
+            android:layout_height="37dp"
+            android:background="@drawable/shape_now_pay_red"
+            android:gravity="center"
+            android:text="@string/go_pay"
+            android:textColor="@color/app_main_default"
+            android:textSize="15sp"
+            android:visibility="visible"/>
+    </LinearLayout>
+</LinearLayout>

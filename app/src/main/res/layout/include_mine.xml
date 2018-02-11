@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/app_main_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="172dp"
+        android:background="@drawable/wode_bg">
+
+        <RelativeLayout
+            android:id="@+id/ry_login"
+            android:layout_width="match_parent"
+            android:layout_height="75dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:id="@+id/iv_mine_massage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:padding="13dp"
+                    android:src="@drawable/wode_xiaoxi"
+                    android:contentDescription="@string/message_icon"/>
+            </RelativeLayout>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="14dp"
+            android:paddingLeft="14dp"
+            android:paddingTop="14dp">
+
+            <com.lixin.freshmall.view.RoundedImageView
+                android:id="@+id/mine_user_icon"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:adjustViewBounds="true"
+                android:padding="1.5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/my_head_portrait"
+                app:is_oval="true"
+                tools:ignore="ContentDescription"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/head_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="登录/注册"
+                android:textColor="@color/app_main_default"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:orientation="horizontal"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:padding="8dp">
+        <LinearLayout
+            android:id="@+id/linear_mine_balance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="余额"
+                android:textSize="13sp"
+                android:textColor="@color/text_color_default"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/tv_mine_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="￥100元"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/text_color_green"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <include layout="@layout/v_vertical_line"/>
+        <LinearLayout
+            android:id="@+id/linear_mine_integral"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="积分"
+                android:textSize="13sp"
+                android:textColor="@color/text_color_default"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/tv_mine_integral"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="100分"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/text_color_green"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <include layout="@layout/v_vertical_line"/>
+        <LinearLayout
+            android:id="@+id/linear_mine_coupon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="优惠券"
+                android:textSize="13sp"
+                android:textColor="@color/text_color_default"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/tv_mine_coupon_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10张"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/text_color_green"
+                android:gravity="center"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="我的订单"
+        android:textSize="12sp"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/text_color_default"
+        android:background="@color/app_main_default"/>
+    <include layout="@layout/v_horizontal_line"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/app_main_default"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+        <TextView
+            android:id="@+id/text_mine_wait_pay"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/mine_wait_pay"
+            android:textSize="11sp"
+            android:textColor="@color/text_color_default"
+            android:drawableTop="@drawable/wodetubiao01"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:drawablePadding="6dp"/>
+
+        <TextView
+            android:id="@+id/text_main_wait_goods"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/main_wait_goods"
+            android:textSize="11sp"
+            android:textColor="@color/text_color_default"
+            android:drawableTop="@drawable/wodetubiao02"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:drawablePadding="6dp"/>
+        <TextView
+            android:id="@+id/text_main_send_goods"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/main_wait_send"
+            android:textSize="11sp"
+            android:textColor="@color/text_color_default"
+            android:drawableTop="@drawable/peisong"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:drawablePadding="6dp"/>
+
+        <TextView
+            android:id="@+id/text_mine_completed"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/mine_completed"
+            android:textSize="11sp"
+            android:textColor="@color/text_color_default"
+            android:drawableTop="@drawable/wodetubiao03"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:drawablePadding="6dp"/>
+
+        <TextView
+            android:id="@+id/text_mine_evaluate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/mine_evaluate"
+            android:textSize="11sp"
+            android:textColor="@color/text_color_default"
+            android:drawableTop="@drawable/wodetubiao04"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:drawablePadding="6dp"/>
+
+        <TextView
+            android:id="@+id/text_mine_refund"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/mine_refund"
+            android:textSize="11sp"
+            android:textColor="@color/text_color_default"
+            android:drawableTop="@drawable/wodetubiao05"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:drawablePadding="6dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_mine_life"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/wodetubiao06"
+                android:contentDescription="@string/mine_life"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="1"
+                android:text="@string/mine_life"
+                android:textColor="@color/text_color_main"
+                android:textSize="15sp"
+                />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/linear_mine_red_packages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/wodetubiao07"
+                android:contentDescription="@string/mine_red_packages"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="1"
+                android:text="@string/mine_red_packages"
+                android:textColor="@color/text_color_main"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/linear_mine_collection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/wodetubiao08"
+                android:contentDescription="@string/mine_collection"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="1"
+                android:text="@string/mine_collection"
+                android:textColor="@color/text_color_main"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/linear_mine_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/wodetubiao09"
+                android:contentDescription="@string/mine_share"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="1"
+                android:text="@string/mine_share"
+                android:textColor="@color/text_color_main"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/linear_mine_customer_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/wodetubiao10"
+                android:contentDescription="@string/mine_customer_service"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="1"
+                android:text="@string/mine_customer_service"
+                android:textColor="@color/text_color_main"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+
+    <LinearLayout
+        android:id="@+id/linear_mine_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/wodetubiao11"
+                android:contentDescription="@string/mine_setting"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_weight="1"
+                android:text="@string/mine_setting"
+                android:textColor="@color/text_color_main"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_in"
+            android:contentDescription="@string/right_arrow"/>
+    </LinearLayout>
+
+    <include layout="@layout/v_horizontal_line" />
+</LinearLayout>
