@@ -2,7 +2,6 @@ package com.lixin.freshmall.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -36,18 +35,15 @@ import com.lixin.freshmall.activity.ShopDecActivity;
 import com.lixin.freshmall.adapter.HomeAdapter;
 import com.lixin.freshmall.adapter.MyGridViewAdpter;
 import com.lixin.freshmall.adapter.MyViewPagerAdapter;
-import com.lixin.freshmall.adapter.NewShopAdapter;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.HomeBean;
 import com.lixin.freshmall.okhttp.OkHttpUtils;
 import com.lixin.freshmall.okhttp.budiler.StringCallback;
 import com.lixin.freshmall.uitls.GlideImageLoader;
-import com.lixin.freshmall.uitls.ImageManagerUtils;
 import com.lixin.freshmall.uitls.SPUtil;
 import com.lixin.freshmall.uitls.StatusBarUtil;
 import com.lixin.freshmall.uitls.ToastUtils;
 import com.lixin.freshmall.uitls.Utils;
-import com.lixin.freshmall.view.ImageSlideshow;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerClickListener;
@@ -66,24 +62,16 @@ import okhttp3.Call;
  */
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener, OnBannerClickListener {
-    private GridView newGrid;
     private ViewPager viewPager;
     private LinearLayout group;
     private EditText shopSearch;
     private ListView home_list;
+    private HomeAdapter mAdapter;
     private Banner mSlideshow01;
-    private HomeAdapter homeAdapter;
-    private ImageView mPicture01;
-    private ImageSlideshow mSlideshow02;
-    private View view, headView, footView;
-    private NewShopAdapter mNewShopAdapter;
-    private ImageView mPicture02, mPicture03;
-    private TextView mTitle01, mNowPrice01, mOldPrice01, mTitle02, mNowPrice02, mOldPrice02, mTitle03, mNowPrice03, mOldPrice03, name;
+    private View view, headView;
     private List<HomeBean.rotateTopCommoditys> rotateTopList;
-    private List<HomeBean.rotateAdvertisement> rotateAdList;
+    private List<HomeBean.ThemeList> mList;
     private List<HomeBean.classifyBottom> classifyBottomList;
-    private List<HomeBean.promoteCommoditys> promoteCommoditysList;
-    private List<HomeBean.newsCommoditys> newsCommoditysList;
     private List<String> imag;
     private CallBackValue callBackValue;
     private int totalPage; //总的页数
@@ -107,10 +95,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         Town = SPUtil.getString(context,"Town");
         StoreName = SPUtil.getString(context,"storeName");
         rotateTopList = new ArrayList<>();
-        rotateAdList = new ArrayList<>();
+        mList = new ArrayList<>();
         classifyBottomList = new ArrayList<>();
-        promoteCommoditysList = new ArrayList<>();
-        newsCommoditysList = new ArrayList<>();
         initView();
         getdata();
         return view;
@@ -142,58 +128,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 return false;
             }
         });
-
         home_list = view.findViewById(R.id.home_list);
         headView = LayoutInflater.from(getActivity()).inflate(R.layout.home_list_head, null);
         mSlideshow01 = headView.findViewById(R.id.img_home_gallery);
         mSlideshow01.setOnBannerClickListener(this);
-        mSlideshow02 = headView.findViewById(R.id.img_store_gallery1);
         viewPager = headView.findViewById(R.id.home_viewpager);
         group = headView.findViewById(R.id.home_points);
-        headView.findViewById(R.id.linear_shop_promotion).setOnClickListener(this);
-
-        headView.findViewById(R.id.linear_promotion_01).setOnClickListener(this);
-        mPicture01 = headView.findViewById(R.id.iv_shop_picture01);
-        mTitle01 = headView.findViewById(R.id.text_shop_title01);
-        mNowPrice01 = headView.findViewById(R.id.text_shop_now_price01);
-        mOldPrice01 = headView.findViewById(R.id.text_shop_old_price01);
-        mOldPrice01.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-
-        headView.findViewById(R.id.linear_promotion_02).setOnClickListener(this);
-        mPicture02 = headView.findViewById(R.id.iv_shop_picture02);
-        mTitle02 = headView.findViewById(R.id.text_shop_title02);
-        mNowPrice02 = headView.findViewById(R.id.text_shop_now_price02);
-        mOldPrice02 = headView.findViewById(R.id.text_shop_old_price02);
-        mOldPrice02.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-
-        headView.findViewById(R.id.linear_promotion_03).setOnClickListener(this);
-        mPicture03 = headView.findViewById(R.id.iv_shop_picture03);
-        mTitle03 = headView.findViewById(R.id.text_shop_title03);
-        mNowPrice03 = headView.findViewById(R.id.text_shop_now_price03);
-        mOldPrice03 = headView.findViewById(R.id.text_shop_old_price03);
-        mOldPrice03.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-
-        headView.findViewById(R.id.linear_shop_hot).setOnClickListener(this);
-
-        footView = LayoutInflater.from(getActivity()).inflate(R.layout.home_list_foot, null);
-        footView.findViewById(R.id.linear_shop_new).setOnClickListener(this);
-
-        newGrid = footView.findViewById(R.id.grid_new_shop);
-        mNewShopAdapter = new NewShopAdapter();
-        newGrid.setAdapter(mNewShopAdapter);
-        newGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), ShopDecActivity.class);
-                intent.putExtra("rotateid", newsCommoditysList.get(position).getCommodityid());
-                intent.putExtra("rotateIcon", newsCommoditysList.get(position).getCommodityIcon());
-                startActivity(intent);
-            }
-        });
         home_list.addHeaderView(headView);
-        home_list.addFooterView(footView);
-        homeAdapter = new HomeAdapter();
-        home_list.setAdapter(homeAdapter);
+        mAdapter = new HomeAdapter(context,mList);
+        home_list.setAdapter(mAdapter);
     }
 
     private void getdata() {
@@ -218,56 +161,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 if (homeBean.getResult().equals("1")) {
                     ToastUtils.makeText(getActivity(), homeBean.getResultNote());
                 }
-
-                List<HomeBean.rotateTopCommoditys> rotateTopCommoditys = homeBean.rotateTopCommoditys;//顶部轮播图集合
+                List<HomeBean.rotateTopCommoditys> rotateTopCommoditys = homeBean.getRotateTopCommoditys();//顶部轮播图集合
                 rotateTopList.addAll(rotateTopCommoditys);
                 initTopViewData(rotateTopList);
-                List<HomeBean.rotateAdvertisement> rotateAdvertisement = homeBean.rotateAdvertisement;//中部轮播图
-                rotateAdList.addAll(rotateAdvertisement);
-                initAdViewData(rotateAdList);
-                List<HomeBean.classifyBottom> classifyBottom = homeBean.classifyBottom;//类别
+                List<HomeBean.classifyBottom> classifyBottom = homeBean.getClassifyBottom();//类别
                 classifyBottomList.addAll(classifyBottom);
                 Constant.mClassifyBottom = classifyBottomList;
                 initData(classifyBottom);
-                List<HomeBean.hotCommoditys> hotCommoditys = homeBean.hotCommoditys;
-                homeAdapter.setHome(getActivity(), hotCommoditys);
-                home_list.setAdapter(homeAdapter);
-                List<HomeBean.newsCommoditys> newsCommoditys = homeBean.newsCommoditys;
-                newsCommoditysList.addAll(newsCommoditys);
-                mNewShopAdapter.setNewShop(getActivity(), newsCommoditysList);
-                newGrid.setAdapter(mNewShopAdapter);
-                List<HomeBean.promoteCommoditys> promoteCommoditys = homeBean.promoteCommoditys;
-                promoteCommoditysList.addAll(promoteCommoditys);
-                if(promoteCommoditys != null && !promoteCommoditys.isEmpty() && promoteCommoditys.size() >= 3) {
-                    mTitle01.setText(promoteCommoditys.get(0).getCommodityTitle());
-                    mTitle02.setText(promoteCommoditys.get(1).getCommodityTitle());
-                    mTitle03.setText(promoteCommoditys.get(2).getCommodityTitle());
-
-                    mNowPrice01.setText(promoteCommoditys.get(0).getCommodityNewPrice() + "元/" + promoteCommoditys.get(0).getCommodityUnit());
-                    mNowPrice02.setText(promoteCommoditys.get(1).getCommodityNewPrice() + "元/" + promoteCommoditys.get(1).getCommodityUnit());
-                    mNowPrice03.setText(promoteCommoditys.get(2).getCommodityNewPrice() + "元/" + promoteCommoditys.get(2).getCommodityUnit());
-
-                    mOldPrice01.setText("市场价:" + promoteCommoditys.get(0).getCommodityOriginalPrice() + "元/" + promoteCommoditys.get(0).getCommodityUnit());
-                    mOldPrice02.setText("市场价:" + promoteCommoditys.get(1).getCommodityOriginalPrice() + "元/" + promoteCommoditys.get(1).getCommodityUnit());
-                    mOldPrice03.setText("市场价:" + promoteCommoditys.get(2).getCommodityOriginalPrice() + "元/" + promoteCommoditys.get(2).getCommodityUnit());
-                    String img1 = promoteCommoditys.get(0).getCommodityIcon();
-                    String img2 = promoteCommoditys.get(1).getCommodityIcon();
-                    String img3 = promoteCommoditys.get(2).getCommodityIcon();
-                    if (TextUtils.isEmpty(img1)) {
-                        mPicture01.setImageResource(R.drawable.image_fail_empty);
-                    } else {
-                        ImageManagerUtils.imageLoader.displayImage(img1, mPicture01, ImageManagerUtils.options3);
-                    }
-                    if (TextUtils.isEmpty(img2)) {
-                        mPicture02.setImageResource(R.drawable.image_fail_empty);
-                    } else {
-                        ImageManagerUtils.imageLoader.displayImage(img2, mPicture02, ImageManagerUtils.options3);
-                    }
-                    if (TextUtils.isEmpty(img3)) {
-                        mPicture03.setImageResource(R.drawable.image_fail_empty);
-                    } else {
-                        ImageManagerUtils.imageLoader.displayImage(img3, mPicture03, ImageManagerUtils.options3);
-                    }
+                List<HomeBean.ThemeList> themeLists = homeBean.getThemeList();
+                if (themeLists != null && !themeLists.isEmpty() && themeLists.size() > 0){
+                    mList.addAll(themeLists);
+                    mAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -285,36 +189,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 .start();
     }
 
-    private void initAdViewData(final List<HomeBean.rotateAdvertisement> rotateAdList) {
-        for (int i = 0; i < rotateAdList.size(); i++) {
-            mSlideshow02.addImageTitle(rotateAdList.get(i).getAdvertisementIcon());
-        }
-        mSlideshow02.setDotSpace(12);
-        mSlideshow02.setDotSize(12);
-        mSlideshow02.setDelay(10000);
-        mSlideshow02.setOnItemClickListener(new ImageSlideshow.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(context, ShopDecActivity.class);
-                intent.putExtra("rotateid", rotateAdList.get(position).getAdvertisementid());
-                intent.putExtra("rotateIcon", rotateAdList.get(position).getAdvertisementid());
-                startActivity(intent);
-            }
-        });
-        mSlideshow02.commit();
-    }
-
     // 类别展示
     private void initData(List<HomeBean.classifyBottom> classifyBottomList) {
-        //总的页数向上取整
         totalPage = (int) Math.ceil(classifyBottomList.size() * 1.0 / mPageSize);
         viewPagerList = new ArrayList<>();
         for (int i = 0; i < totalPage; i++) {
-            //每个页面都是inflate出一个新实例
             final View view = LayoutInflater.from(context).inflate(R.layout.item_gridview, null);
             final GridView gridView = view.findViewById(R.id.gridView);
             gridView.setAdapter(new MyGridViewAdpter(getActivity(), classifyBottomList, i, mPageSize));
-            //添加item点击监听
             final int finalI = i;
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -323,16 +205,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                     callBackValue.SendMessageValue("6", pos);
                 }
             });
-            //每一个GridView作为一个View对象添加到ViewPager集合中
             viewPagerList.add(view);
         }
-        //设置ViewPager适配器
         viewPager.setAdapter(new MyViewPagerAdapter(viewPagerList));
-        //添加小圆点
         ivPoints = new ImageView[totalPage];
         if (totalPage > 1) {
             for (int i = 0; i < totalPage; i++) {
-                //循坏加入点点图片组
                 ivPoints[i] = new ImageView(context);
                 if (i == 0) {
                     ivPoints[i].setImageResource(R.drawable.dot_selected);
@@ -349,8 +227,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             return;
         }
-
-        //设置ViewPager的滑动监听，主要是设置点点的背景颜色的改变
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -387,50 +263,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                     startActivity(intent6);
                 }
                 break;
-            case R.id.linear_shop_promotion:
-                Intent intent0 = new Intent(getActivity(), MoreShopActivity.class);
-                intent0.putExtra("flag", "0");
-                startActivity(intent0);
-                break;
+
             case R.id.linear_shop_hot:
                 Intent intent1 = new Intent(getActivity(), MoreShopActivity.class);
                 intent1.putExtra("flag", "1");
                 startActivity(intent1);
-                break;
-            case R.id.linear_shop_new:
-                Intent intent2 = new Intent(getActivity(), MoreShopActivity.class);
-                intent2.putExtra("flag", "2");
-                startActivity(intent2);
-                break;
-            case R.id.linear_promotion_01:
-                if(promoteCommoditysList != null && !promoteCommoditysList.isEmpty() && promoteCommoditysList.size() >= 3) {
-                    Intent intent3 = new Intent(getActivity(), ShopDecActivity.class);
-                    intent3.putExtra("rotateid", promoteCommoditysList.get(0).getCommodityid());
-                    intent3.putExtra("rotateIcon", promoteCommoditysList.get(0).getCommodityIcon());
-                    startActivity(intent3);
-                }else {
-                    ToastUtils.makeText(context,"暂无商品信息");
-                }
-                break;
-            case R.id.linear_promotion_02:
-                if(promoteCommoditysList != null && !promoteCommoditysList.isEmpty() && promoteCommoditysList.size() >= 3) {
-                    Intent intent4 = new Intent(getActivity(), ShopDecActivity.class);
-                    intent4.putExtra("rotateid", promoteCommoditysList.get(1).getCommodityid());
-                    intent4.putExtra("rotateIcon", promoteCommoditysList.get(1).getCommodityIcon());
-                    startActivity(intent4);
-                }else {
-                    ToastUtils.makeText(context,"暂无商品信息");
-                }
-                break;
-            case R.id.linear_promotion_03:
-                if(promoteCommoditysList != null && !promoteCommoditysList.isEmpty() && promoteCommoditysList.size() >= 3) {
-                    Intent intent5 = new Intent(getActivity(), ShopDecActivity.class);
-                    intent5.putExtra("rotateid", promoteCommoditysList.get(2).getCommodityid());
-                    intent5.putExtra("rotateIcon", promoteCommoditysList.get(2).getCommodityIcon());
-                    startActivity(intent5);
-                }else {
-                    ToastUtils.makeText(context,"暂无商品信息");
-                }
                 break;
             default:
                 break;
@@ -453,14 +290,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    //写一个回调接口
     public interface CallBackValue {
         void SendMessageValue(String strValue, int position);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-
         if (hidden) {
         } else {
             if (rotateTopList.isEmpty()) {

@@ -20,5 +20,11 @@ public class Constant {
         public static final int NOWAY = 10032;
     }
     public static final String FIRST_COME = "first_come";
+
+    /**
+     * Jpush返回参数
+     */
+    public static final String JPUSH_EXTRA = "jpush";
+    public static String EXTRA = "extra";
     public static List<HomeBean.classifyBottom> mClassifyBottom;
 }

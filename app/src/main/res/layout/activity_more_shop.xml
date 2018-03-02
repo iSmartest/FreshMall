@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_main_default">
+    android:background="@color/app_main_background">
     <include layout="@layout/activity_base"/>
     <com.example.xrecyclerview.XRecyclerView
         android:id="@+id/more_shop_grid"

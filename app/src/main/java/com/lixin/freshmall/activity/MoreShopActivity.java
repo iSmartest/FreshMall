@@ -9,13 +9,11 @@ import com.example.xrecyclerview.XRecyclerView;
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
 import com.lixin.freshmall.adapter.MoreHotShopAdapter;
-import com.lixin.freshmall.adapter.MoreNewShopAdapter;
 import com.lixin.freshmall.listenter.RecyclerItemTouchListener;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.MoreShopBean;
 import com.lixin.freshmall.okhttp.OkHttpUtils;
 import com.lixin.freshmall.okhttp.budiler.StringCallback;
-import com.lixin.freshmall.uitls.DividerGridItemDecoration;
 import com.lixin.freshmall.uitls.SPUtil;
 import com.lixin.freshmall.uitls.ToastUtils;
 
@@ -33,56 +31,39 @@ import okhttp3.Call;
  */
 
 public class MoreShopActivity extends BaseActivity {
-    private int flag;
+
     private XRecyclerView more_shop_grid;
     private MoreHotShopAdapter mAdapter;
-    private MoreNewShopAdapter moreNewShopAdapter;
+
     private int nowPage = 1;
     private List<MoreShopBean.moreCommoditys> mList = new ArrayList<>();
-    private String TownId;
+    private String TownId,themeId,themeTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_shop);
         Intent intent = getIntent();
-        flag = Integer.parseInt(intent.getStringExtra("flag"));
+        themeId = intent.getStringExtra("themeId");
+        themeTitle = intent.getStringExtra("themeTitle");
         TownId = SPUtil.getString(context, "TownId");
         hideBack(2);
-        if (flag == 0) {
-            setTitleText("促销专区");
-        } else if (flag == 1) {
-            setTitleText("热销专区");
-        } else if (flag == 2) {
-            setTitleText("新品专区");
-        }
+        setTitleText(themeTitle);
         initView();
         getdata(true);
     }
 
     private void initView() {
         more_shop_grid = findViewById(R.id.more_shop_grid);
-        if (flag == 1) {
-            more_shop_grid.setLayoutManager(new GridLayoutManager(context, 3));
-            more_shop_grid.addItemDecoration(new DividerGridItemDecoration(context,3));
-            mAdapter = new MoreHotShopAdapter(context, mList);
-            more_shop_grid.setAdapter(mAdapter);
-        } else {
-            more_shop_grid.setLayoutManager(new GridLayoutManager(context, 2));
-            more_shop_grid.addItemDecoration(new DividerGridItemDecoration(context,2));
-            moreNewShopAdapter = new MoreNewShopAdapter(context, mList);
-            more_shop_grid.setAdapter(moreNewShopAdapter);
-        }
+        more_shop_grid.setLayoutManager(new GridLayoutManager(context, 2));
+        mAdapter = new MoreHotShopAdapter(context, mList);
+        more_shop_grid.setAdapter(mAdapter);
         more_shop_grid.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 nowPage = 1;
                 mList.clear();
-                if (flag == 1){
-                    mAdapter.notifyDataSetChanged();
-                }else {
-                    moreNewShopAdapter.notifyDataSetChanged();
-                }
+                mAdapter.notifyDataSetChanged();
                 getdata(false);
             }
 
@@ -109,7 +90,8 @@ public class MoreShopActivity extends BaseActivity {
 
     private void getdata(boolean isShowLoadDialog) {
         Map<String,String> params = new HashMap<>();
-        final String json = "{\"cmd\":\"getMoreCommoditys\",\"nowPage\":\"" + nowPage + "\",\"moreType\":\"" + flag + "\",\"city\":\"" + TownId + "\"}";
+        final String json = "{\"cmd\":\"getMoreCommoditys\",\"nowPage\":\"" + nowPage + "\"" +
+                ",\"themeId\":\"" + themeId + "\",\"city\":\"" + TownId + "\"}";
         params.put("json", json);
         if (isShowLoadDialog){
             dialog1.show();
@@ -136,11 +118,7 @@ public class MoreShopActivity extends BaseActivity {
                 }
                 List<MoreShopBean.moreCommoditys> commodityslist = moreShopBean.moreCommoditys;
                 mList.addAll(commodityslist);
-                if (flag == 1){
-                    mAdapter.notifyDataSetChanged();
-                }else {
-                    moreNewShopAdapter.notifyDataSetChanged();
-                }
+                mAdapter.notifyDataSetChanged();
                 more_shop_grid.refreshComplete();
 
                 if (moreShopBean.getTotalPage() < nowPage) {

@@ -59,7 +59,7 @@ public class OrderDecAdapter extends BaseAdapter {
             viewHolder = (OrderDecViewHolder) convertView.getTag();
         }
         OrderDec.Commoditys commoditys = mList.get(position);
-        viewHolder.comm_title.setText(commoditys.getCommodityTitle() + "/" + commoditys.getCommodityUnit());
+        viewHolder.comm_title.setText(commoditys.getCommodityTitle());
         Log.i("OrderlistAdapter", "getView: " + commoditys.getCommodityTitle());
         viewHolder.comm_price.setText("￥" + commoditys.getCommodityNewPrice());
         viewHolder.comm_number.setText("x" + commoditys.getCommodityBuyNum());

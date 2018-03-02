@@ -52,12 +52,23 @@
         <!--activity基类-->
         <activity android:name=".activity.BaseActivity"/>
         <!--选择门店-->
-        <activity android:name=".activity.SelectProvinceActivity"/>
-        <activity android:name=".activity.SelectCityActivity"/>
-        <activity android:name=".activity.SelectAreaActivity"/>
-        <activity android:name=".activity.SelectStoreActivity"/>
+        <activity android:name=".activity.SelectProvinceActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.SelectCityActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.SelectAreaActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.SelectStoreActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--登录-->
-        <activity android:name=".activity.LoginActivity"/>
+        <activity android:name=".activity.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <!--主页面-->
         <activity android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"
@@ -65,77 +76,152 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask"/>
         <!--找回密码-->
-        <activity android:name=".activity.ForgetPwdActivity"/>
+        <activity android:name=".activity.ForgetPwdActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <!--注册-->
-        <activity android:name=".activity.RegisterActivity"/>
+        <activity android:name=".activity.RegisterActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <!--绑定手机号-->
-        <activity android:name=".activity.BindingPhoneActivity"/>
+        <activity android:name=".activity.BindingPhoneActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <!--搜索商品-->
-        <activity android:name=".activity.SearchShopActivity"/>
+        <activity android:name=".activity.SearchShopActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--商品详情页面-->
-        <activity android:name=".activity.ShopDecActivity"/>
+        <activity android:name=".activity.ShopDecActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--商品评价-->
-        <activity android:name=".activity.ShopEvaluateActivity"/>
+        <activity android:name=".activity.ShopEvaluateActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--立即购买-->
-        <activity android:name=".activity.NowBuyActivity"/>
+        <activity android:name=".activity.NowBuyActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--购物袋-->
-        <activity android:name=".activity.ShoppingBagActivity"/>
+        <activity android:name=".activity.ShoppingBagActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--更多商品-->
-        <activity android:name=".activity.MoreShopActivity"/>
+        <activity android:name=".activity.MoreShopActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--个人信息-->
-        <activity android:name=".activity.MyPersonalInformationActivity"/>
+        <activity android:name=".activity.MyPersonalInformationActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--地址管理-->
-        <activity android:name=".activity.MyAddressListActivity"/>
+        <activity android:name=".activity.MyAddressListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--添加、编辑地址-->
-        <activity android:name=".activity.AddAddressActivity"/>
+        <activity android:name=".activity.AddAddressActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--地图选址-->
-        <activity android:name=".activity.LocationAndPoiSearchActivity"/>
+        <activity android:name=".activity.LocationAndPoiSearchActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我的消息-->
-        <activity android:name=".activity.MyMassageActivity"/>
+        <activity android:name=".activity.MyMassageActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--修改昵称-->
-        <activity android:name=".activity.ModifyNameActivity"/>
+        <activity android:name=".activity.ModifyNameActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我的钱包-->
-        <activity android:name=".activity.MyBalanceActivity"/>
+        <activity android:name=".activity.MyBalanceActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--零钱明细-->
-        <activity android:name=".activity.MoneyDecActivity"/>
+        <activity android:name=".activity.MoneyDecActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我的积分-->
-        <activity android:name=".activity.MyIntegralActivity"/>
+        <activity android:name=".activity.MyIntegralActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--积分明细-->
-        <activity android:name=".activity.MyIntegralDecActivity"/>
+        <activity android:name=".activity.MyIntegralDecActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我的优惠券-->
-        <activity android:name=".activity.MyCouponActivity"/>
+        <activity android:name=".activity.MyCouponActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--关于我们、用户协议-->
-        <activity android:name=".activity.SettingAboutUsActivity"/>
+        <activity android:name=".activity.SettingAboutUsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我的订单-->
-        <activity android:name=".activity.MyOrderActivity"/>
+        <activity android:name=".activity.MyOrderActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我的评价-->
-        <activity android:name=".activity.MyEvaluateActivity"/>
+        <activity android:name=".activity.MyEvaluateActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--去评价-->
-        <activity android:name=".activity.GoEvaluateActivity"/>
+        <activity android:name=".activity.GoEvaluateActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--订单详情-->
-        <activity android:name=".activity.OrderDecActivity"/>
+        <activity android:name=".activity.OrderDecActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--订单明细-->
-        <activity android:name=".activity.OrderMoneyDecActivity"/>
+        <activity android:name=".activity.OrderMoneyDecActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--退款详情-->
-        <activity android:name=".activity.RefundDecActivity"/>
+        <activity android:name=".activity.RefundDecActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我要退款-->
-        <activity android:name=".activity.WantRefundActivity"/>
+        <activity android:name=".activity.WantRefundActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--美味生活-->
-        <activity android:name=".activity.MyLifeActivity"/>
+        <activity android:name=".activity.MyLifeActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--红包来了-->
-        <activity android:name=".activity.MyRedPackagesActivity"/>
+        <activity android:name=".activity.MyRedPackagesActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--发展用户-->
-        <activity android:name=".activity.InvitingUsersActivity"/>
+        <activity android:name=".activity.InvitingUsersActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我的收藏-->
-        <activity android:name=".activity.MyCollectionActivity"/>
+        <activity android:name=".activity.MyCollectionActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--我的设置-->
-        <activity android:name=".activity.MySettingActivity"/>
+        <activity android:name=".activity.MySettingActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--意见反馈-->
-        <activity android:name=".activity.SettingFeedbackActivity"/>
+        <activity android:name=".activity.SettingFeedbackActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--版本更新-->
-        <activity android:name=".activity.UpdateActivity"/>
+        <activity android:name=".activity.UpdateActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--知识详情-->
-        <activity android:name=".activity.KnowLedgeWebActivity"/>
+        <activity android:name=".activity.KnowLedgeWebActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <!--Android 7.0相机调用-->
         <provider
             android:name="android.support.v4.content.FileProvider"

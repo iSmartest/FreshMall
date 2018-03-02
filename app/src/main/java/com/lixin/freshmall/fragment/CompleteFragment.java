@@ -3,7 +3,6 @@ package com.lixin.freshmall.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +11,7 @@ import android.view.ViewGroup;
 import com.example.xrecyclerview.XRecyclerView;
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
-import com.lixin.freshmall.activity.MyApplication;
-import com.lixin.freshmall.activity.OrderDecActivity;
 import com.lixin.freshmall.adapter.MyOrderAdapter;
-import com.lixin.freshmall.listenter.RecyclerItemTouchListener;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.MyOrderBean;
 import com.lixin.freshmall.okhttp.OkHttpUtils;
@@ -77,21 +73,6 @@ public class CompleteFragment extends BaseFragment{
                 getdata(false);
                 mAdapter.notifyDataSetChanged();
                 order_list.refreshComplete();
-            }
-        });
-
-        order_list.addOnItemTouchListener(new RecyclerItemTouchListener(order_list) {
-            @Override
-            public void onItemClick(RecyclerView.ViewHolder vh) {
-                int position = vh.getAdapterPosition() - 1;
-                if (position < 0 | position >= mList.size()){
-                    return;
-                }
-                Bundle bundle = new Bundle();
-                bundle.putString("orderId",mList.get(position).getOrderId());
-                bundle.putString("orderState",orderState);
-                bundle.putString("payTime",mList.get(position).getPaytime());
-                MyApplication.openActivity(context,OrderDecActivity.class,bundle);
             }
         });
     }

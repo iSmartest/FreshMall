@@ -8,14 +8,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
+import com.lixin.freshmall.activity.MyApplication;
 import com.lixin.freshmall.activity.NowBuyActivity;
+import com.lixin.freshmall.activity.OrderDecActivity;
 import com.lixin.freshmall.activity.RefundDecActivity;
 import com.lixin.freshmall.activity.WantRefundActivity;
+import com.lixin.freshmall.dialog.LogOutDialog;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.GenerateOrderBean;
 import com.lixin.freshmall.model.MyOrderBean;
@@ -54,6 +59,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
     private String orderState;
     private String mMoney;
     private int nowPage = 1;
+    private LogOutDialog mLogOutDialog;
     public MyOrderAdapter(Context context, List<MyOrderBean.Orders> mList, String uid, String orderState) {
         this.context = context;
         this.mList = mList;
@@ -95,9 +101,17 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                 viewHolder.bt_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int type = 0;
-                        mList.remove(position);
-                        getCancelOrder(ordersList.getOrderId(),type,position);
+
+                        mLogOutDialog = new LogOutDialog(context, "确定取消订单吗？","取消","确定",new LogOutDialog.OnSureBtnClickListener() {
+                            @Override
+                            public void sure() {
+                                mLogOutDialog.dismiss();
+                                int type = 0;
+                                mList.remove(position);
+                                getCancelOrder(ordersList.getOrderId(),type,position);
+                            }
+                        });
+                        mLogOutDialog.show();
                     }
                 });
                 viewHolder.bt_pay.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +131,16 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                         initData(ordersList.getOrderId(),ordersList.getOderTotalPrice(),ordersList.getPaytime());
                     }
                 });
+                viewHolder.commodity_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("orderId",ordersList.getOrderId());
+                        bundle.putString("orderState",orderState);
+                        bundle.putString("payTime",ordersList.getPaytime());
+                        MyApplication.openActivity(context,OrderDecActivity.class,bundle);
+                    }
+                });
                 break;
             case "3":
                 viewHolder.order_state.setText("已完成");
@@ -125,9 +149,26 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                 viewHolder.bt_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int type = 1;
-                        mList.remove(position);
-                        getCancelOrder(ordersList.getOrderId(),type,position);
+                            mLogOutDialog = new LogOutDialog(context, "确定删除订单吗？","取消","确定",new LogOutDialog.OnSureBtnClickListener() {
+                                @Override
+                                public void sure() {
+                                    mLogOutDialog.dismiss();
+                                    int type = 1;
+                                    mList.remove(position);
+                                    getCancelOrder(ordersList.getOrderId(),type,position);
+                                }
+                            });
+                        mLogOutDialog.show();
+                    }
+                });
+                viewHolder.commodity_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("orderId",ordersList.getOrderId());
+                        bundle.putString("orderState",orderState);
+                        bundle.putString("payTime",ordersList.getPaytime());
+                        MyApplication.openActivity(context,OrderDecActivity.class,bundle);
                     }
                 });
                 break;
@@ -164,6 +205,16 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                     @Override
                     public void onClick(View v) {
                         initData(ordersList.getOrderId(),ordersList.getOderTotalPrice(),ordersList.getPaytime());
+                    }
+                });
+                viewHolder.commodity_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("orderId",ordersList.getOrderId());
+                        bundle.putString("orderState",orderState);
+                        bundle.putString("payTime",ordersList.getPaytime());
+                        MyApplication.openActivity(context,OrderDecActivity.class,bundle);
                     }
                 });
                 break;
@@ -247,7 +298,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
         });
     }
     class MyOrderViewHolder extends RecyclerView.ViewHolder {
-
+        LinearLayout ll_order_list;
         TextView order_number;
         TextView order_state;
         ListView commodity_lv;
@@ -256,6 +307,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
 
         public MyOrderViewHolder(View itemView) {
             super(itemView);
+            ll_order_list = itemView.findViewById(R.id.ll_order_list);
             order_number = itemView.findViewById(R.id.order_number);
             order_state = itemView.findViewById(R.id.order_state);
             commodity_lv = itemView.findViewById(R.id.commodity_lv);

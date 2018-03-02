@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_main_default">
-    <ListView
+    <com.lixin.freshmall.view.MyListView
         android:id="@+id/spec_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@null"
         android:scrollbars="none">
-    </ListView>
+    </com.lixin.freshmall.view.MyListView>
 </LinearLayout>

@@ -33,7 +33,7 @@ public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.
 
     @Override
     public MoreShopViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_grid_shop,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_more_grid_shop,parent,false);
         MoreShopViewHolder viewHolder = new MoreShopViewHolder(view);
         return viewHolder;
     }
@@ -69,10 +69,10 @@ public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.
 
         public MoreShopViewHolder(View itemView) {
             super(itemView);
-            mPicture = itemView.findViewById(R.id.ima_grid_shop_picture);
-            mShopName = itemView.findViewById(R.id.text_grid_shop_name);
-            mNowPrice = itemView.findViewById(R.id.text_grid_shop_now_price);
-            mMarketPrice = itemView.findViewById(R.id.text_grid_shop_market_price);
+            mPicture = itemView.findViewById(R.id.ima_more_grid_shop_picture);
+            mShopName = itemView.findViewById(R.id.text_more_grid_shop_name);
+            mNowPrice = itemView.findViewById(R.id.text_more_grid_shop_now_price);
+            mMarketPrice = itemView.findViewById(R.id.text_more_grid_shop_market_price);
         }
     }
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
 import com.lixin.freshmall.adapter.OrderDecAdapter;
+import com.lixin.freshmall.dialog.LogOutDialog;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.GenerateOrderBean;
 import com.lixin.freshmall.model.MyWelletBean;
@@ -57,7 +58,7 @@ public class OrderDecActivity extends BaseActivity {
     private List<GenerateOrderBean.commoditys> list;
     private List<OrderDec.OrderDetailed> orderDetailedList;
     private int nowPage = 1;
-
+    private LogOutDialog mLogOutDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -257,8 +258,15 @@ public class OrderDecActivity extends BaseActivity {
                         initData(orderId,totalPrice,payTime);
                         break;
                     case "3":
-                        int delete = 1;
-                        getCancelOrder(orderId, delete);
+                        mLogOutDialog = new LogOutDialog(context, "确定删除订单吗？","取消","确定",new LogOutDialog.OnSureBtnClickListener() {
+                            @Override
+                            public void sure() {
+                                mLogOutDialog.dismiss();
+                                int delete = 1;
+                                getCancelOrder(orderId, delete);
+                            }
+                        });
+                        mLogOutDialog.show();
                         break;
                     case "5":
                         initData(orderId,totalPrice,payTime);
@@ -272,9 +280,7 @@ public class OrderDecActivity extends BaseActivity {
                 break;
             case R.id.order_dec_money_dec:
                 Bundle bundle = new Bundle();
-                bundle.putString("totalPrice", totalPrice);
-                bundle.putString("giveChange", giveChange);
-                bundle.putSerializable("orderDetailedList", (Serializable) orderDetailedList);
+                bundle.putString("orderId", orderId);
                 MyApplication.openActivity(context, OrderMoneyDecActivity.class, bundle);
                 break;
             default:

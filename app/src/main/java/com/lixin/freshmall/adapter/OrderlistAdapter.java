@@ -59,7 +59,7 @@ public class OrderlistAdapter extends BaseAdapter{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         MyOrderBean.Orders.orderCommodity mList = orderCommodity.get(position);
-        viewHolder.comm_title.setText(mList.getCommodityTitle() + "/" + mList.getCommodityUnit());
+        viewHolder.comm_title.setText(mList.getCommodityTitle());
         Log.i("OrderlistAdapter", "getView: " + mList.getCommodityTitle());
         viewHolder.comm_price.setText("￥" + mList.getCommodityNewPrice());
         viewHolder.comm_number.setText("x" + mList.getCommodityBuyNum());

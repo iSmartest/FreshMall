@@ -25,19 +25,20 @@ import java.util.List;
 
 public class HomeHotGridAdapter extends BaseAdapter{
     private Context context;
-    private List<HomeBean.hotCommoditys> hotCommoditys;
-    public HomeHotGridAdapter(Context context, List<HomeBean.hotCommoditys> hotCommoditys) {
+    private List<HomeBean.ThemeList.CommodityList> commodityList;
+    public HomeHotGridAdapter(Context context, List<HomeBean.ThemeList.CommodityList> commodityList) {
         this.context = context;
-        this.hotCommoditys = hotCommoditys;
+        this.commodityList = commodityList;
     }
+
     @Override
     public int getCount() {
-        return hotCommoditys == null ? 0 : hotCommoditys.size();
+        return commodityList == null ? 0 : commodityList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return hotCommoditys.get(position);
+        return commodityList.get(position);
     }
 
     @Override
@@ -59,10 +60,10 @@ public class HomeHotGridAdapter extends BaseAdapter{
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        HomeBean.hotCommoditys mList = hotCommoditys.get(position);
-        viewHolder.mShopName.setText(mList.commodityTitle);
-        viewHolder.mNowPrice.setText(mList.getCommodityNewPrice() + "元/" + mList.commodityUnit);
-        viewHolder.mMarketPrice.setText("市场价:" + mList.getCommodityOriginalPrice() + "元/" + mList.commodityUnit);
+        HomeBean.ThemeList.CommodityList mList = commodityList.get(position);
+        viewHolder.mShopName.setText(mList.getCommodityTitle());
+        viewHolder.mNowPrice.setText(mList.getCommodityNewPrice() + "元/" + mList.getCommodityUnit());
+        viewHolder.mMarketPrice.setText("市场价:" + mList.getCommodityOriginalPrice() + "元/" + mList.getCommodityNewPrice());
         String img = mList.getCommodityIcon();
         if (TextUtils.isEmpty(img)){
             viewHolder.mPicture.setImageResource(R.drawable.image_fail_empty);

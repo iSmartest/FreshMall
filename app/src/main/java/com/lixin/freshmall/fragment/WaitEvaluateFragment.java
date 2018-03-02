@@ -38,7 +38,7 @@ public class WaitEvaluateFragment extends BaseFragment{
     private XRecyclerView order_list;
     private MyEvaluateAdapter mAdapter;
     private int nowPage = 1;
-    private String uid;
+    private String uid,townId;
     private String commentState = "0";
     private List<MyEvaluateBean.OrderCommodity> mList;
     @Nullable
@@ -46,6 +46,7 @@ public class WaitEvaluateFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_order_content,null);
         uid = SPUtil.getString(getActivity(),"uid");
+        townId = SPUtil.getString(getActivity(),"TownId");
         mList = new ArrayList<>();
         initView();
         getdata(true);
@@ -80,7 +81,7 @@ public class WaitEvaluateFragment extends BaseFragment{
     private void getdata(boolean isShowLoadDialog) {
         Map<String, String> params = new HashMap<>();
         final String json="{\"cmd\":\"getMyCommodityComment\",\"commentState\":\"" + commentState +"\",\"uid\":\""
-                + uid + "\",\"nowPage\":\"" + nowPage + "\"}";
+                + uid + "\",\"nowPage\":\"" + nowPage + "\",\"townId\":\"" + townId + "\"}";
         params.put("json", json);
         Log.i("WaitPaymentFragment", "onResponse: " + json);
         if (isShowLoadDialog){

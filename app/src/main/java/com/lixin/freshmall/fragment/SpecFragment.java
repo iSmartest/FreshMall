@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
@@ -18,6 +17,7 @@ import com.lixin.freshmall.okhttp.budiler.StringCallback;
 import com.lixin.freshmall.uitls.SPUtil;
 import com.lixin.freshmall.uitls.ToastUtils;
 import com.lixin.freshmall.uitls.Utility;
+import com.lixin.freshmall.view.MyListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ import okhttp3.Call;
 public class SpecFragment extends BaseFragment {
     private View view;
     private String rotateid,uid;
-    private ListView spec_list;
+    private MyListView spec_list;
     private List<ShopDecBean.CommoditySpec> mList;
     private SpecAdapter mAdapter;
     @Nullable

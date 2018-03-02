@@ -74,9 +74,6 @@ public class MyEvaluateActivity extends BaseActivity {
                 case 1:
                     setSelect(1);
                     break;
-                case 2:
-                    setSelect(2);
-                    break;
             }
             viewPager.setCurrentItem(index);
         }
@@ -94,9 +91,6 @@ public class MyEvaluateActivity extends BaseActivity {
                     break;
                 case 1:
                     setSelect(1);
-                    break;
-                case 2:
-                    setSelect(2);
                     break;
             }
         }
