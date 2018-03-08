@@ -1,12 +1,14 @@
 package com.lixin.freshmall.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,7 +31,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
 import com.lixin.freshmall.adapter.NowBuyAdapter;
+import com.lixin.freshmall.beecloude.BCPay;
+import com.lixin.freshmall.beecloude.BeeCloud;
+import com.lixin.freshmall.beecloude.async.BCCallback;
+import com.lixin.freshmall.beecloude.async.BCResult;
+import com.lixin.freshmall.beecloude.entity.BCPayResult;
+import com.lixin.freshmall.beecloude.entity.BCReqParams;
 import com.lixin.freshmall.dialog.LogOutDialog;
+import com.lixin.freshmall.dialog.ProgressDialog;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.GenerateOrderBean;
 import com.lixin.freshmall.model.StoreTimeBean;
@@ -41,10 +50,6 @@ import com.lixin.freshmall.popupwindow.SendGoodsTimePopupWindow;
 import com.lixin.freshmall.uitls.DoubleCalculationUtil;
 import com.lixin.freshmall.uitls.SPUtil;
 import com.lixin.freshmall.uitls.ToastUtils;
-import com.pingplusplus.android.Pingpp;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,22 +68,23 @@ import okhttp3.Call;
  */
 
 public class NowBuyActivity extends BaseActivity {
-
-    private View headView,cursor_send,cursor_get;
+    private View headView, cursor_send, cursor_get;
     private CheckBox mCheckBox;
     private EditText tvMessage;
     private LogOutDialog dialog;
     private ListView now_buy_list;
     private NowBuyAdapter mAdapter;
     private boolean isCheckBox = false;
-    private int storeEndTime,currentTime;
-    private LinearLayout mLinearBalance, mLinearChooseTime,mLyDistributionFee;
+    private int storeEndTime, currentTime;
+    private LinearLayout mLinearBalance, mLinearChooseTime, mLyDistributionFee;
     private ArrayList<? extends GenerateOrderBean.commoditys> mList;
     private TextView totalPrice, tvChooseTime, tvChooseData, tvShoppingBag, tvCoupon, mBalance, mSure, mTvOk;
-    private Double mTotalPrice,mTempTotalPrice, money, allPrice, Surplus, totalMoney, reducePrice = 0.00, shoppingBagPrice = 0.00, temp = 0.00,free = 0.00, fullFree = 0.00;
-    private String orderId, mMoney, storeName, storeAddress, storePhone,storeId,addressId,address,userName,phone,dateString,channel, charge, issend,getTime = "",sendTime = "",couponId = "", shoppingBag = "";
-    private TextView mStoreName,mStorePhone,mStoreAddress, mAddressTitle,mReservationData,mReservationTime,mGetGoods,mSendGoods,mDistributionFee;
+    private Double mTotalPrice, mTempTotalPrice, money, allPrice, Surplus, totalMoney, reducePrice = 0.00, shoppingBagPrice = 0.00, temp = 0.00, free = 0.00, fullFree = 0.00;
+    private String orderId, mMoney, storeName, storeAddress, storePhone, storeId, addressId, address, userName, phone, dateString, channel, issend, getTime = "", sendTime = "", couponId = "", shoppingBag = "";
+    private TextView mStoreName, mStorePhone, mStoreAddress, mAddressTitle, mReservationData, mReservationTime, mGetGoods, mSendGoods, mDistributionFee;
     private boolean mChooseMode = true;
+    private Dialog progressDlg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,14 +102,21 @@ public class NowBuyActivity extends BaseActivity {
         storeAddress = SPUtil.getString(context, "storeAddress");
         storePhone = SPUtil.getString(context, "storePhone");
         storeId = SPUtil.getString(context, "storeId");
+        BeeCloud.setAppIdAndSecret("636883c7-e0ff-403a-b81d-8cf8d8cf6d88",
+                "9d70a721-e0ff-4362-9bd7-a4010215c01c");
+        String initInfo = BCPay.initWechatPay(context, "wxf2e7a3ba30d356a2");
+        if (initInfo != null) {
+            Toast.makeText(this, "微信初始化失败：" + initInfo, Toast.LENGTH_LONG).show();
+        }
         initView();
         getdata();
         showType(true);
         initData();
     }
+
     private void getdata() {
         Map<String, String> params = new HashMap<>();
-        final String json="{\"cmd\":\"getStoreInfoTime\",\"storeId\":\"" + storeId +"\"}";
+        final String json = "{\"cmd\":\"getStoreInfoTime\",\"storeId\":\"" + storeId + "\"}";
         params.put("json", json);
         dialog1.show();
         OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params)
@@ -113,6 +126,7 @@ public class NowBuyActivity extends BaseActivity {
                 ToastUtils.makeText(context, e.getMessage());
                 dialog1.dismiss();
             }
+
             @Override
             public void onResponse(String response, int id) {
                 Log.i("MyWalletActivity", "onResponse: " + response);
@@ -125,15 +139,14 @@ public class NowBuyActivity extends BaseActivity {
                 }
                 issend = storeTimeBean.getIssend();
                 fullFree = storeTimeBean.getSendAllMoney();
-                if (mTotalPrice >= fullFree){
+                if (mTotalPrice >= fullFree) {
                     free = 0.0;
-                }else {
+                } else {
                     free = storeTimeBean.getSendMoney();
                 }
             }
         });
     }
-
 
 
     private void initView() {
@@ -177,8 +190,8 @@ public class NowBuyActivity extends BaseActivity {
         now_buy_list.setAdapter(mAdapter);
     }
 
-    private void showType(boolean isShow){
-        if (isShow){
+    private void showType(boolean isShow) {
+        if (isShow) {
             mAddressTitle.setText("取货地址");
             mStoreName.setText(storeName);
             mStorePhone.setText(storePhone);
@@ -193,7 +206,7 @@ public class NowBuyActivity extends BaseActivity {
             mLyDistributionFee.setVisibility(View.GONE);
             mTotalPrice = mTempTotalPrice;
             totalPrice.setText("" + mTotalPrice);
-        }else {
+        } else {
             mAddressTitle.setText("送货地址");
             mStoreName.setText(" ");
             mStorePhone.setText(" ");
@@ -206,15 +219,16 @@ public class NowBuyActivity extends BaseActivity {
             cursor_get.setVisibility(View.INVISIBLE);
             cursor_send.setVisibility(View.VISIBLE);
             mLyDistributionFee.setVisibility(View.VISIBLE);
-            if (fullFree <= mTotalPrice){
+            if (fullFree <= mTotalPrice) {
                 mDistributionFee.setText("免配送费");
-            }else {
+            } else {
                 mDistributionFee.setText(free + "(满" + fullFree + "免配送费)");
             }
             mTotalPrice = mTotalPrice + free;
             totalPrice.setText("" + mTotalPrice);
         }
     }
+
     private void initData() {
         Date date = new Date();//取时间
         Calendar calendar = new GregorianCalendar();
@@ -254,7 +268,7 @@ public class NowBuyActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_add_information:
-                if (mChooseMode){
+                if (mChooseMode) {
                     if (dialog == null)
                         dialog = new LogOutDialog(NowBuyActivity.this, storePhone, "取消", "呼叫", new LogOutDialog.OnSureBtnClickListener() {
                             @Override
@@ -267,18 +281,18 @@ public class NowBuyActivity extends BaseActivity {
                             }
                         });
                     dialog.show();
-                }else {
+                } else {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("type",1);
-                   MyApplication.openActivityForResult(NowBuyActivity.this,MyAddressListActivity.class,bundle,1002);
+                    bundle.putInt("type", 1);
+                    MyApplication.openActivityForResult(NowBuyActivity.this, MyAddressListActivity.class, bundle, 1002);
                 }
                 break;
             case R.id.text_now_buy_sure:
                 Submit(mChooseMode);
                 break;
             case R.id.text_choose_time:
-                if (mChooseMode){
-                    GetGoodsTimePopupWindow mGetGoodsTimePopupWindow = new GetGoodsTimePopupWindow(context, mLinearChooseTime,storeId);
+                if (mChooseMode) {
+                    GetGoodsTimePopupWindow mGetGoodsTimePopupWindow = new GetGoodsTimePopupWindow(context, mLinearChooseTime, storeId);
                     mGetGoodsTimePopupWindow.setSelectedTextListener(new GetGoodsTimePopupWindow.SelectedTextListener() {
                         @Override
                         public void sure(String name) {
@@ -286,8 +300,8 @@ public class NowBuyActivity extends BaseActivity {
                             getTime = name;
                         }
                     });
-                }else {
-                    SendGoodsTimePopupWindow mGetGoodsTimePopupWindow = new SendGoodsTimePopupWindow(context, mLinearChooseTime,storeId);
+                } else {
+                    SendGoodsTimePopupWindow mGetGoodsTimePopupWindow = new SendGoodsTimePopupWindow(context, mLinearChooseTime, storeId);
                     mGetGoodsTimePopupWindow.setSelectedTextListener(new SendGoodsTimePopupWindow.SelectedTextListener() {
                         @Override
                         public void sure(String name) {
@@ -311,11 +325,11 @@ public class NowBuyActivity extends BaseActivity {
                 showType(true);
                 break;
             case R.id.linear_send_goods:
-                if (issend.equals("0")){
+                if (issend.equals("0")) {
                     mChooseMode = false;
                     showType(false);
-                }else {
-                    ToastUtils.makeText(context,"该门店暂不支持送货上门服务");
+                } else {
+                    ToastUtils.makeText(context, "该门店暂不支持送货上门服务");
                 }
                 break;
         }
@@ -328,47 +342,47 @@ public class NowBuyActivity extends BaseActivity {
         String oderPayPrice = totalPrice.getText().toString().trim();
         String mTime = tvChooseTime.getText().toString().trim();
         String mPickUpGoodsTime = dateString + mTime;
-        if (isChoseMode){
+        if (isChoseMode) {
             if (TextUtils.isEmpty(getTime)) {
                 ToastUtils.makeText(NowBuyActivity.this, "请预约取货时间");
             } else {
-                storeEndTime = SPUtil.getInt(context, "storeEndTime",0);
+                storeEndTime = SPUtil.getInt(context, "storeEndTime", 0);
                 Calendar calendar = Calendar.getInstance();
                 currentTime = calendar.get(Calendar.HOUR_OF_DAY);
-                if (currentTime > storeEndTime){
-                    ToastUtils.makeText(context,"现在下单已经来不及了，明天再下单吧！");
+                if (currentTime > storeEndTime) {
+                    ToastUtils.makeText(context, "现在下单已经来不及了，明天再下单吧！");
                     return;
                 }
-                getSubmitOrder(0,mPickUpGoodsTime, takeGoodMessage, totalMoney, oderPayPrice);
+                getSubmitOrder(0, mPickUpGoodsTime, takeGoodMessage, totalMoney, oderPayPrice);
             }
-        }else {
-            if (TextUtils.isEmpty(mStoreAddress.getText().toString().trim())){
-                ToastUtils.makeText(context,"送货地址不能为空");
+        } else {
+            if (TextUtils.isEmpty(mStoreAddress.getText().toString().trim())) {
+                ToastUtils.makeText(context, "送货地址不能为空");
                 return;
             }
             if (TextUtils.isEmpty(sendTime)) {
                 ToastUtils.makeText(NowBuyActivity.this, "请预约收货时间");
             } else {
-                storeEndTime = SPUtil.getInt(context, "storeEndTime",0);
+                storeEndTime = SPUtil.getInt(context, "storeEndTime", 0);
                 Calendar calendar = Calendar.getInstance();
                 currentTime = calendar.get(Calendar.HOUR_OF_DAY);
-                if (currentTime > storeEndTime){
-                    ToastUtils.makeText(context,"现在下单已经来不及了，明天再下单吧！");
+                if (currentTime > storeEndTime) {
+                    ToastUtils.makeText(context, "现在下单已经来不及了，明天再下单吧！");
                     return;
                 }
-                getSubmitOrder(1,mPickUpGoodsTime, takeGoodMessage, totalMoney, oderPayPrice);
+                getSubmitOrder(1, mPickUpGoodsTime, takeGoodMessage, totalMoney, oderPayPrice);
             }
         }
     }
 
-    private void getSubmitOrder(int type ,String time, String takeGoodMessage, final double totalMoney, final String oderPayPrice) {
+    private void getSubmitOrder(int type, String time, String takeGoodMessage, final double totalMoney, final String oderPayPrice) {
         Map<String, String> params = new HashMap<>();
-        final String json = "{\"cmd\":\"commitCommodity\",\"orderId\":\"" + orderId + "\",\"type\":\""+type+"\",\"sendMoney\":\""+free+"\",\"takeGoodDate\":\""
-                + time + "\",\"takeGoodMessage\":\"" + takeGoodMessage + "\",\"oderTotalPrice\":\"" + (mTotalPrice+shoppingBagPrice) + "\"" +
+        final String json = "{\"cmd\":\"commitCommodity\",\"orderId\":\"" + orderId + "\",\"type\":\"" + type + "\",\"sendMoney\":\"" + free + "\",\"takeGoodDate\":\""
+                + time + "\",\"takeGoodMessage\":\"" + takeGoodMessage + "\",\"oderTotalPrice\":\"" + (mTotalPrice + shoppingBagPrice) + "\"" +
                 ",\"totalMoney\":\"" + totalMoney + "\",\"securitiesid\":\"" + couponId + "\",\"oderPayPrice\":\"" + oderPayPrice + "\"" +
                 ",\"getGoodsStore\":\"" + storeName + "\",\"getGoodsAddress\":\"" + storeAddress + "\"," +
-                "\"getGoodsPhone\":\"" + storePhone + "\",\"shoppingBag\":\"" + shoppingBag + "\",\"getGoodsId\":\"" + storeId + "\",\"addressId\":\""+addressId+"\"" +
-                ",\"address\":\""+address+"\",\"userName\":\""+userName+"\",\"phone\":\""+phone+"\"}";
+                "\"getGoodsPhone\":\"" + storePhone + "\",\"shoppingBag\":\"" + shoppingBag + "\",\"getGoodsId\":\"" + storeId + "\",\"addressId\":\"" + addressId + "\"" +
+                ",\"address\":\"" + address + "\",\"userName\":\"" + userName + "\",\"phone\":\"" + phone + "\"}";
         params.put("json", json);
         Log.i("NowBuyActivity", "onResponse: " + json);
         dialog1.show();
@@ -433,7 +447,7 @@ public class NowBuyActivity extends BaseActivity {
                         ToastUtils.makeText(context, "请选择支付方式");
                         return;
                     }
-                    charge(mtotalMoney, "溜达兔", channel, orderId);
+                    ThreePayment(mtotalMoney, "溜达兔", type, orderId);
                 }
             });
             radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -482,6 +496,7 @@ public class NowBuyActivity extends BaseActivity {
         }
     }
 
+
     class poponDismissListener implements PopupWindow.OnDismissListener {
 
         @Override
@@ -497,87 +512,103 @@ public class NowBuyActivity extends BaseActivity {
         ((Activity) context).getWindow().setAttributes(lp);
     }
 
-    //获取charge 用于第三方支付
-    private void charge(Double mtotalMoney, String body, final String channel, String orderId) {
-        int amount = (int) (mtotalMoney * 100);
-        Map<String, String> params = new HashMap<>();
-        final String json = "{\"cmd\":\"getChargeCommodity\",\"amount\":\"" + amount + "\",\"orderId\":\""
-                + orderId + "\",\"channel\":\"" + channel + "\",\"body\":\"" + body + "\"}";
-        params.put("json", json);
-        dialog1.show();
-        OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params)
-                .build().execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                ToastUtils.makeText(context, e.getMessage());
+    private void ThreePayment(Double mtotalMoney, String boby, String type, String orderId) {
+//        int amount = (int) (mtotalMoney * 100);
+        int amount = 1;
+        progressDlg = ProgressDialog.createLoadingDialog(context, "处理中，请稍后...");
+        if (type.equals("1")) {
+            progressDlg.show();
+            Map<String, String> mapOptional = new HashMap<String, String>();
+            mapOptional.put("testkey1", "测试value值1");
+            if (BCPay.isWXAppInstalledAndSupported() && BCPay.isWXPaySupported()) {
+                BCPay.PayParams payParams = new BCPay.PayParams();
+                payParams.channelType = BCReqParams.BCChannelTypes.WX_APP;
+                payParams.billTitle = boby;   //订单标题
+                payParams.billTotalFee = amount;    //订单金额(分)
+                payParams.billNum = orderId;  //订单流水号
+//              payParams.couponId = "bbbf835d-f6b0-484f-bb6e-8e6082d4a35f";    // 优惠券ID
+                payParams.optional = mapOptional;            //扩展参数(可以null)
+                BCPay.getInstance(context).reqPaymentAsync(payParams, bcCallback);
+            } else {
+                ToastUtils.makeText(context, "您尚未安装微信或者安装的微信版本不支持");
                 dialog1.dismiss();
             }
+        } else {
+            dialog1.show();
+            Map<String, String> mapOptional = new HashMap<>();
+            BCPay.PayParams aliParam = new BCPay.PayParams();
+            aliParam.channelType = BCReqParams.BCChannelTypes.ALI_APP;
+            aliParam.billTitle = boby;
+            aliParam.billTotalFee = amount;
+            aliParam.billNum = orderId;
+            aliParam.optional = mapOptional;
+            BCPay.getInstance(context).reqPaymentAsync(aliParam, bcCallback);
+        }
+    }
 
-            @Override
-            public void onResponse(String response, int id) {
-                dialog1.dismiss();
-                String result = "1";//返回码
-                String resultNote = "";//错误信息
-                try {
-                    JSONObject object = new JSONObject(response);
-                    if (object.has("result") && !object.isNull("result")) {
-                        result = object.getString("result");
-                    }
-
-                    if (object.has("resultNote") && !object.isNull("resultNote")) {
-                        resultNote = object.getString("resultNote");
-                    }
-
-                    if (object.has("charge") && !object.isNull("charge")) {
-                        charge = object.getString("charge");
-                    }
-                    Log.i("charge", "onResponse: " + charge);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+    BCCallback bcCallback = new BCCallback() {
+        @Override
+        public void done(final BCResult bcResult) {
+            final BCPayResult bcPayResult = (BCPayResult) bcResult;
+            dialog1.dismiss();
+            String result = bcPayResult.getResult();
+            Message msg = mHandler.obtainMessage();
+            if (result.equals(BCPayResult.RESULT_SUCCESS)) {
+                msg.what = 1;
+            } else if (result.equals(BCPayResult.RESULT_CANCEL)) {
+                msg.what = 2;
+            } else if (result.equals(BCPayResult.RESULT_FAIL)) {
+                Log.i("fail", "支付失败, 原因: " + bcPayResult.getErrCode() +
+                        " # " + bcPayResult.getErrMsg() +
+                        " # " + bcPayResult.getDetailInfo());
+                if (bcPayResult.getErrMsg().equals("PAY_FACTOR_NOT_SET") && bcPayResult.getDetailInfo().startsWith("支付宝参数")) {
+                    Log.i("fail", "支付失败, 原因: 由于支付宝政策原因，故不再提供支付宝支付的测试功能，给您带来的不便，敬请谅解");
                 }
-                if (result.equals("0")) {
-                    new PaymentTask().execute(new PaymentRequest(channel, 1));
-                } else {
-                    Toast.makeText(NowBuyActivity.this, resultNote, Toast.LENGTH_SHORT).show();
-                }
+                msg.what = 3;
+            } else if (result.equals(BCPayResult.RESULT_UNKNOWN)) {
+                msg.what = 4;
+            } else {
+                msg.what = 5;
             }
-        });
-    }
 
-    class PaymentRequest {
-        String channel;
-        double amount;
+            mHandler.sendMessage(msg);
 
-        public PaymentRequest(String channel, double amount) {
-            this.channel = channel;
-            this.amount = amount;
         }
-    }
+    };
 
-    class PaymentTask extends AsyncTask<PaymentRequest, Void, String> {
+    private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
-        protected void onPreExecute() {
-            //按键点击之后的禁用，防止重复点击
-            mTvOk.setOnClickListener(null);
-        }
-
-        @Override
-        protected String doInBackground(PaymentRequest... pr) {
-            String data = null;
-            data = charge;
-            return data;
-        }
-
-        //获得服务端的charge，调用ping++ sdk。
-        @Override
-        protected void onPostExecute(String data) {
-            if (null == data) {
-                return;
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    if (isCheckBox) {
+                        Intent intent = new Intent();
+                        intent.setAction("com.freshmall.mine.changed");
+                        getApplicationContext().sendBroadcast(intent);
+                    }
+                    Intent intent = new Intent();
+                    intent.setAction("com.freshmall.code.changed");
+                    getApplicationContext().sendBroadcast(intent);
+//                  LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    ToastUtils.makeText(context, "订单支付成功");
+                    finish();
+                    break;
+                case 2:
+                    ToastUtils.makeText(context, "用户取消支付");
+                    break;
+                case 3:
+                    ToastUtils.makeText(context, "订单支付失败");
+                    break;
+                case 4:
+                    ToastUtils.makeText(context, "订单状态未知");
+                    break;
+                case 5:
+                    ToastUtils.makeText(context, "invalid return");
+                    break;
             }
-            Pingpp.createPayment(NowBuyActivity.this, data);
+            return true;
         }
-    }
+    });
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -624,7 +655,7 @@ public class NowBuyActivity extends BaseActivity {
                     totalPrice.setText(temp + "");
                     mBalance.setText(money + "");
                 }
-            }else if (resultCode == 1003){
+            } else if (resultCode == 1003) {
                 addressId = data.getStringExtra("addressId");
                 address = data.getStringExtra("address");
                 userName = data.getStringExtra("userName");
@@ -632,40 +663,6 @@ public class NowBuyActivity extends BaseActivity {
                 mStoreName.setText(userName);
                 mStorePhone.setText(phone);
                 mStoreAddress.setText(address);
-            }
-        }
-
-        if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
-            if (resultCode == Activity.RESULT_OK) {
-                String result = data.getExtras().getString("pay_result");
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
-                switch (result) {
-                    case "success":
-                        //如果使用余额，通知我的页面
-                        if (isCheckBox) {
-                            Intent intent = new Intent();
-                            intent.setAction("com.freshmall.mine.changed");
-                            getApplicationContext().sendBroadcast(intent);
-                        }
-                        Intent intent = new Intent();
-                        intent.setAction("com.freshmall.code.changed");
-                        getApplicationContext().sendBroadcast(intent);
-                        ToastUtils.makeText(this, "支付成功");
-                        finish();
-                        break;
-                    case "fail":
-                        ToastUtils.makeText(this, "支付失败");
-                        break;
-                    case "cancel":
-                        ToastUtils.makeText(this, "取消支付");
-                        break;
-                    case "invalid":
-                        ToastUtils.makeText(this, "支付插件未安装");
-                        break;
-                    default:
-                        break;
-                }
             }
         }
     }

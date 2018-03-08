@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,10 +19,10 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.xrecyclerview.XRecyclerView;
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
 import com.lixin.freshmall.activity.KnowLedgeWebActivity;
@@ -65,7 +66,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private ViewPager viewPager;
     private LinearLayout group;
     private EditText shopSearch;
-    private ListView home_list;
+    private XRecyclerView home_list;
     private HomeAdapter mAdapter;
     private Banner mSlideshow01;
     private View view, headView;
@@ -129,14 +130,34 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
         home_list = view.findViewById(R.id.home_list);
+        home_list.setLayoutManager(new LinearLayoutManager(getActivity()));
         headView = LayoutInflater.from(getActivity()).inflate(R.layout.home_list_head, null);
         mSlideshow01 = headView.findViewById(R.id.img_home_gallery);
         mSlideshow01.setOnBannerClickListener(this);
         viewPager = headView.findViewById(R.id.home_viewpager);
         group = headView.findViewById(R.id.home_points);
-        home_list.addHeaderView(headView);
+        if (headView != null){
+            home_list.addHeaderView(headView);
+        }
         mAdapter = new HomeAdapter(context,mList);
         home_list.setAdapter(mAdapter);
+        home_list.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                mList.clear();
+                getdata();
+                mAdapter.notifyDataSetChanged();
+                home_list.refreshComplete();
+            }
+
+            @Override
+            public void onLoadMore() {
+                home_list.noMoreLoading();
+                home_list.refreshComplete();
+                return;
+
+            }
+        });
     }
 
     private void getdata() {

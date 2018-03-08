@@ -65,6 +65,7 @@ public class OrderMoneyDecActivity extends BaseActivity {
         Map<String, String> params = new HashMap<>();
         final String json = "{\"cmd\":\"orderDetailInfo\",\"orderId\":\"" + orderId + "\"}";
         params.put("json", json);
+        Log.i("getGoodsCode", "onResponse: " + json);
         dialog1.show();
         OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params).build().execute(new StringCallback() {
             @Override

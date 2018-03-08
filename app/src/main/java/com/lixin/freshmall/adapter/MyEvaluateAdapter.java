@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.lixin.freshmall.R;
 import com.lixin.freshmall.activity.GoEvaluateActivity;
 import com.lixin.freshmall.activity.MyApplication;
+import com.lixin.freshmall.dialog.LogOutDialog;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.MyEvaluateBean;
 import com.lixin.freshmall.model.UserInfo;
@@ -39,6 +40,7 @@ public class MyEvaluateAdapter extends RecyclerView.Adapter<MyEvaluateAdapter.My
     private Context context;
     private List<MyEvaluateBean.OrderCommodity> mList;
     private String uid, commentState;
+    private LogOutDialog mLogOutDialog;
     public MyEvaluateAdapter(Context context, List<MyEvaluateBean.OrderCommodity> mList, String uid, String commentState) {
         this.context = context;
         this.mList = mList;
@@ -54,7 +56,7 @@ public class MyEvaluateAdapter extends RecyclerView.Adapter<MyEvaluateAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(final MyEvaluateViewHolder holder, int position) {
+    public void onBindViewHolder(final MyEvaluateViewHolder holder, final int position) {
         final MyEvaluateBean.OrderCommodity orderCommodity = mList.get(position);
         String img = orderCommodity.getCommodityIcon();
         if (TextUtils.isEmpty(img)){
@@ -85,7 +87,16 @@ public class MyEvaluateAdapter extends RecyclerView.Adapter<MyEvaluateAdapter.My
         holder.tv_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCancelOrder(orderCommodity.getCommentId(),holder.getAdapterPosition());
+                mLogOutDialog = new LogOutDialog(context, "确定删除订单吗？","取消","确定",new LogOutDialog.OnSureBtnClickListener() {
+                    @Override
+                    public void sure() {
+                        mLogOutDialog.dismiss();
+                        int type = 1;
+                        mList.remove(position);
+                        getCancelOrder(orderCommodity.getCommentId(),holder.getAdapterPosition());
+                    }
+                });
+                mLogOutDialog.show();
             }
         });
     }

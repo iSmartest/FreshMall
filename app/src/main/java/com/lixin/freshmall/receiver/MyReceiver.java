@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.lixin.freshmall.activity.MyCouponActivity;
+import com.lixin.freshmall.activity.MyOrderActivity;
 import com.lixin.freshmall.activity.OrderMoneyDecActivity;
 import com.lixin.freshmall.activity.RefundDecActivity;
 import com.lixin.freshmall.activity.ShopDecActivity;
@@ -92,13 +93,15 @@ public class MyReceiver extends BroadcastReceiver {
                     detailIntent = new Intent(context,ShopDecActivity.class);
                     detailIntent.putExtra("rotateid", json.getString("id"))
                             .putExtra("rotateIcon", "url");
-
                 }else if (type == 2){
                     detailIntent = new Intent(context,RefundDecActivity.class);
                     detailIntent.putExtra("orderId", json.getString("id"));
                 }else if (type == 3){
                     detailIntent = new Intent(context,OrderMoneyDecActivity.class);
                     detailIntent.putExtra("orderId", json.getString("id"));
+                }else if (type == 4){
+                    detailIntent = new Intent(context,MyOrderActivity.class);
+                    detailIntent.putExtra("currentItem", "1");
                 }
             } catch (JSONException e) {
                 CommonLog.e(e);

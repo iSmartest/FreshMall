@@ -2,12 +2,12 @@ package com.lixin.freshmall.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +27,7 @@ import java.util.List;
  * My mailbox is 1403241630@qq.com
  */
 
-public class HomeAdapter extends BaseAdapter {
+public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder> {
     private Context context;
     private List<HomeBean.ThemeList> mList;
     public HomeAdapter(Context context, List<HomeBean.ThemeList> mList) {
@@ -36,34 +36,14 @@ public class HomeAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return mList == null ? 0 : mList.size();
+    public HomeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_home,parent,false);
+        HomeViewHolder viewHolder = new HomeViewHolder(view);
+        return viewHolder;
     }
 
     @Override
-    public Object getItem(int position) {
-        return position;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder viewHolder;
-        if (convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_home,null);
-            viewHolder = new ViewHolder();
-            viewHolder.mThemeLogo = convertView.findViewById(R.id.iv_home_theme_logo);
-            viewHolder.mThemeTitle = convertView.findViewById(R.id.iv_home_theme_title);
-            viewHolder.mHomeMore = convertView.findViewById(R.id.text_home_more);
-            viewHolder.mThemePicture = convertView.findViewById(R.id.iv_home_theme_picture);
-            viewHolder.hotGrid = convertView.findViewById(R.id.grid_home_commodity);
-            convertView.setTag(viewHolder);
-        }else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
+    public void onBindViewHolder(HomeViewHolder viewHolder, int position) {
         final HomeBean.ThemeList themeList = mList.get(position);
         String imgLogo = themeList.getThemeLogo();
         if (TextUtils.isEmpty(imgLogo)){
@@ -107,11 +87,31 @@ public class HomeAdapter extends BaseAdapter {
                 context.startActivity(intent1);
             }
         });
-        return convertView;
     }
-    class ViewHolder {
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mList == null ? 0 : mList.size();
+    }
+
+    class HomeViewHolder extends RecyclerView.ViewHolder{
         ImageView mThemeLogo,mThemePicture;
         TextView mThemeTitle,mHomeMore;
         MyGridView hotGrid;
+
+        public HomeViewHolder(View itemView) {
+            super(itemView);
+            mThemeLogo = itemView.findViewById(R.id.iv_home_theme_logo);
+            mThemeTitle = itemView.findViewById(R.id.iv_home_theme_title);
+            mHomeMore = itemView.findViewById(R.id.text_home_more);
+            mThemePicture = itemView.findViewById(R.id.iv_home_theme_picture);
+            hotGrid = itemView.findViewById(R.id.grid_home_commodity);
+
+        }
     }
 }

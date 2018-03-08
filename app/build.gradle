@@ -16,6 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dexOptions {
+        jumboMode true
+    }
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
@@ -59,13 +62,12 @@ dependencies {
     implementation files('libs/umeng_social_api.jar')
     implementation files('libs/umeng_social_net.jar')
     implementation files('libs/umeng_social_shareboard.jar')
-    compile 'com.pingxx:pingpp-core:2.1.9'
-    //必须添加
-    compile 'com.pingxx:pingpp-alipay:2.1.9'
-    //使用支付宝时添加
-    compile 'com.pingxx:pingpp-wxpay:2.1.9'
-    //使用微信支付时添加
     implementation project(':xrecyclerview')
     implementation project(':tagflowout')
     implementation files('libs/BaiduLBS_Android.jar')
+    implementation files('libs/UPPayAssistEx.jar')
+    implementation files('libs/UPPayPluginExPro.jar')
+    implementation files('libs/zxing-3.2.0.jar')
+    implementation files('libs/Cashier_SDK-v4.2.0.jar')
+    implementation files('libs/alipaySdk-20160809.jar')
 }

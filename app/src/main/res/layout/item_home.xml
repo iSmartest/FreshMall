@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/app_main_background">
 
     <LinearLayout
@@ -68,7 +68,7 @@
         <com.lixin.freshmall.view.MyGridView
             android:id="@+id/grid_home_commodity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:columnCount="3"
             android:numColumns="2"
             android:background="@color/app_main_background"

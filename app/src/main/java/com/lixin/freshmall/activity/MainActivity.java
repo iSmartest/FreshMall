@@ -29,9 +29,7 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
     private Fragment[] mFragments;
     private Fragment currentFragment = new Fragment();
     private int current = 0;
-    private int secondId = 0;
     private Context context;
-    private boolean isSkip = true;
     // 定义一个变量，来标识是否退出
     private static boolean isExit = false;
 
