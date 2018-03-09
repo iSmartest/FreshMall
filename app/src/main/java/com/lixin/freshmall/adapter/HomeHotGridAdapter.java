@@ -56,6 +56,7 @@ public class HomeHotGridAdapter extends BaseAdapter{
             viewHolder.mShopName = convertView.findViewById(R.id.text_grid_shop_name);
             viewHolder.mNowPrice = convertView.findViewById(R.id.text_grid_shop_now_price);
             viewHolder.mMarketPrice = convertView.findViewById(R.id.text_grid_shop_market_price);
+            viewHolder.mSaleState = convertView.findViewById(R.id.tv_sale_state);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -71,11 +72,16 @@ public class HomeHotGridAdapter extends BaseAdapter{
             ImageManagerUtils.imageLoader.displayImage(img, viewHolder.mPicture, ImageManagerUtils.options3);
         }
         viewHolder.mMarketPrice.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
+        if (mList.getIsSoldOut().equals("1")){
+            viewHolder.mSaleState.setVisibility(View.VISIBLE);
+        }else {
+            viewHolder.mSaleState.setVisibility(View.GONE);
+        }
         return convertView;
     }
     class ViewHolder{
         ImageView mPicture;
-        TextView mShopName,mNowPrice,mMarketPrice;
+        TextView mShopName,mNowPrice,mMarketPrice,mSaleState;
 
     }
 }

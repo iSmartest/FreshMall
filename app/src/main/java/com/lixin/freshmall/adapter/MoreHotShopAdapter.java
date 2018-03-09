@@ -51,6 +51,11 @@ public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.
         }else {
             ImageManagerUtils.imageLoader.displayImage(img,viewHolder.mPicture,ImageManagerUtils.options3);
         }
+        if (moreCommoditys.getIsSoldOut().equals("1")){
+            viewHolder.mSaleState.setVisibility(View.VISIBLE);
+        }else if (moreCommoditys.getIsSoldOut().equals("2")){
+            viewHolder.mSaleState.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -65,7 +70,7 @@ public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.
 
     class MoreShopViewHolder extends RecyclerView.ViewHolder{
         ImageView mPicture;
-        TextView mShopName,mNowPrice,mMarketPrice;
+        TextView mShopName,mNowPrice,mMarketPrice,mSaleState;
 
         public MoreShopViewHolder(View itemView) {
             super(itemView);
@@ -73,6 +78,7 @@ public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.
             mShopName = itemView.findViewById(R.id.text_more_grid_shop_name);
             mNowPrice = itemView.findViewById(R.id.text_more_grid_shop_now_price);
             mMarketPrice = itemView.findViewById(R.id.text_more_grid_shop_market_price);
+            mSaleState = itemView.findViewById(R.id.tv_more_sale_state);
         }
     }
 }

@@ -57,6 +57,11 @@ public class SecondAdapter extends RecyclerView.Adapter<SecondAdapter.SecondView
         }else {
             ImageManagerUtils.imageLoader.displayImage(img,viewHolder.Icon,ImageManagerUtils.options3);
         }
+        if (mList.getIsSoldOut().equals("1")){
+            viewHolder.mSaleState.setVisibility(View.VISIBLE);
+        }else {
+            viewHolder.mSaleState.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -66,7 +71,7 @@ public class SecondAdapter extends RecyclerView.Adapter<SecondAdapter.SecondView
 
     public class SecondViewHolder extends RecyclerView.ViewHolder{
         ImageView Icon;
-        TextView Name,Dec,NewPrice,OriginalPrice,Seller,Limit;
+        TextView Name,Dec,NewPrice,OriginalPrice,Seller,Limit,mSaleState;
         public SecondViewHolder(View itemView) {
             super(itemView);
             Icon = itemView.findViewById(R.id.iv_class_shop_icon);
@@ -76,6 +81,7 @@ public class SecondAdapter extends RecyclerView.Adapter<SecondAdapter.SecondView
             OriginalPrice = itemView.findViewById(R.id.text_class_original_price);
             Seller = itemView.findViewById(R.id.text_class_seller);
             Limit = itemView.findViewById(R.id.text_class_limit);
+            mSaleState = itemView.findViewById(R.id.tv_classify_sale_state);
         }
     }
 }

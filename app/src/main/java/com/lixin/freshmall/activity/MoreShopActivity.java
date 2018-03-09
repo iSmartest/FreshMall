@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.xrecyclerview.XRecyclerView;
 import com.google.gson.Gson;
@@ -107,6 +108,7 @@ public class MoreShopActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                Log.i("rer", "onResponse: " + response);
                 Gson gson = new Gson();
                 if (dialog1 != null){
                     dialog1.dismiss();

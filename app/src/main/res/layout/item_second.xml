@@ -12,13 +12,29 @@
         android:paddingLeft="10dp"
         android:gravity="center"
         android:paddingRight="10dp">
-        <ImageView
-            android:id="@+id/iv_class_shop_icon"
+        <RelativeLayout
             android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:src="@drawable/image_fail_empty"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/empty_icon"/>
+            android:layout_height="75dp">
+            <ImageView
+                android:id="@+id/iv_class_shop_icon"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/image_fail_empty"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/empty_icon"/>
+            <TextView
+                android:id="@+id/tv_classify_sale_state"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="已售罄"
+                android:gravity="center"
+                android:textSize="10dp"
+                android:textColor="@color/app_main_default"
+                android:background="@drawable/shape_text_shadow"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="75dp"
@@ -50,6 +66,7 @@
                 android:text="香辣美味"
                 android:singleLine="true"
                 android:ellipsize="end"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

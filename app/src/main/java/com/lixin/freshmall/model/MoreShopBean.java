@@ -53,6 +53,7 @@ public class MoreShopBean {
         public String commodityOriginalPrice;
         public String commodityNewPrice;
         public String commodityUnit;
+        public String isSoldOut;
 
         public String getCommodityUnit() {
             return commodityUnit;
@@ -100,6 +101,14 @@ public class MoreShopBean {
 
         public void setCommodityNewPrice(String commodityNewPrice) {
             this.commodityNewPrice = commodityNewPrice;
+        }
+
+        public String getIsSoldOut() {
+            return isSoldOut;
+        }
+
+        public void setIsSoldOut(String isSoldOut) {
+            this.isSoldOut = isSoldOut;
         }
     }
 }

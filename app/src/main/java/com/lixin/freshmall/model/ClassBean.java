@@ -75,6 +75,7 @@ public class ClassBean {
         private String commoditySeller;
         private String commodityLimitNum;
         private String commodityUnit;
+        private String isSoldOut;
 
         public String getCommodityUnit() {
             return commodityUnit;
@@ -146,6 +147,14 @@ public class ClassBean {
 
         public void setCommodityLimitNum(String commodityLimitNum) {
             this.commodityLimitNum = commodityLimitNum;
+        }
+
+        public String getIsSoldOut() {
+            return isSoldOut;
+        }
+
+        public void setIsSoldOut(String isSoldOut) {
+            this.isSoldOut = isSoldOut;
         }
     }
 }

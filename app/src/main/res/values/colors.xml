@@ -26,4 +26,6 @@
     <color name="text_now_pay">#ffaf00</color>
     <color name="dot_background_color">#fcd196</color>
     <color name="dot_and_line">#e5e9f2</color>
+    <color name="colorBanTransparent">#50000000</color>
+
 </resources>

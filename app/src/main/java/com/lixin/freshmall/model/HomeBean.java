@@ -139,6 +139,7 @@ public class HomeBean {
             private String commodityTitle;
             private String commodityid;
             private String commodityUnit;
+            private String isSoldOut;
 
             public String getCommodityIcon() {
                 return commodityIcon;
@@ -186,6 +187,14 @@ public class HomeBean {
 
             public void setCommodityUnit(String commodityUnit) {
                 this.commodityUnit = commodityUnit;
+            }
+
+            public String getIsSoldOut() {
+                return isSoldOut;
+            }
+
+            public void setIsSoldOut(String isSoldOut) {
+                this.isSoldOut = isSoldOut;
             }
         }
 

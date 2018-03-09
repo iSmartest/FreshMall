@@ -513,8 +513,7 @@ public class NowBuyActivity extends BaseActivity {
     }
 
     private void ThreePayment(Double mtotalMoney, String boby, String type, String orderId) {
-//        int amount = (int) (mtotalMoney * 100);
-        int amount = 1;
+        int amount = (int) (mtotalMoney * 100);
         progressDlg = ProgressDialog.createLoadingDialog(context, "处理中，请稍后...");
         if (type.equals("1")) {
             progressDlg.show();
