@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
@@ -19,6 +20,8 @@ import android.widget.LinearLayout;
 
 import com.lixin.freshmall.R;
 import com.lixin.freshmall.view.StatusBarView;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by Jaeger on 16/2/14.
@@ -523,15 +526,40 @@ public class StatusBarUtil {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void transparentStatusBar(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+            if (!checkDeviceHasNavigationBar(activity)) {
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+            }else {
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }
         } else {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
 
+    public static boolean checkDeviceHasNavigationBar(Activity activity) {
+        boolean hasNavigationBar = false;
+        Resources rs = activity.getResources();
+        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) {
+            hasNavigationBar = rs.getBoolean(id);
+        }
+        try {
+            Class<?> systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            Method m = systemPropertiesClass.getMethod("get", String.class);
+            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+            if ("1".equals(navBarOverride)) {
+                hasNavigationBar = false;
+            } else if ("0".equals(navBarOverride)) {
+                hasNavigationBar = true;
+            }
+        } catch (Exception e) {
+
+        }
+        return hasNavigationBar;
+    }
     /**
      * 创建半透明矩形 View
      *

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
 import com.lixin.freshmall.model.Constant;
-import com.lixin.freshmall.model.UserInfo;
 import com.lixin.freshmall.okhttp.OkHttpUtils;
 import com.lixin.freshmall.okhttp.budiler.StringCallback;
 import com.lixin.freshmall.uitls.SPUtil;
@@ -93,11 +92,11 @@ public class WantRefundActivity extends BaseActivity {
                 Log.i("WaitPaymentFragment", "onResponse: " + response);
                 Gson gson = new Gson();
                 dialog1.dismiss();
-                UserInfo userInfo = gson.fromJson(response, UserInfo.class);
-                if (userInfo.getResult().equals("1")) {
-                    ToastUtils.makeText(context, userInfo.getResultNote());
-                    return;
-                }
+//                UserInfo userInfo = gson.fromJson(response, UserInfo.class);
+//                if (userInfo.getResult().equals("1")) {
+//                    ToastUtils.makeText(context, userInfo.getResultNote());
+//                    return;
+//                }
                 ToastUtils.makeText(WantRefundActivity.this,"退款申请已提交！");
                 Intent intent = new Intent();
                 intent.setAction("com.freshmall.code.changed");

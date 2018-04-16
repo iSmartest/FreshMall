@@ -1,6 +1,7 @@
 package com.lixin.freshmall.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.lixin.freshmall.fragment.ClassifyFragment;
 import com.lixin.freshmall.fragment.CodeFragment;
 import com.lixin.freshmall.fragment.HomeFragment;
 import com.lixin.freshmall.fragment.MineFragment;
+import com.lixin.freshmall.uitls.AppManager;
 import com.lixin.freshmall.uitls.StatusBarUtil;
 
 public class MainActivity extends BaseActivity implements HomeFragment.CallBackValue{
@@ -151,7 +153,7 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
                     Toast.LENGTH_SHORT).show();
             mHandler.sendEmptyMessageDelayed(0, 3000);
         } else {
-            finish();
+            AppManager.finishAllActivity();
             System.exit(0);
         }
     }
@@ -164,9 +166,12 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
                     mLinearLayout[i].setSelected(false);
                 }
             }
-            MyApplication.temp = 1;
-            MyApplication.secondId = position;
+            MyApplication.defaultItem = position;
             setCurrent(1);
+            Intent intent = new Intent();
+            intent.setAction("com.lixin.freshmall.classify.change");
+            intent.putExtra("position",position);
+            getApplicationContext().sendBroadcast(intent);
             current = 1;
         }
     }

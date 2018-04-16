@@ -73,8 +73,8 @@ public class OrdeMoneyDecAdapter extends BaseAdapter {
             viewHolder.actualWeight.setText(orderDetailed.getActualBuyNum());
         }
         viewHolder.commTitle.setText(orderDetailed.getCommodityTitle());
-        viewHolder.buyPrice.setText("￥"+orderDetailed.getBuyPrice());
-        viewHolder.actualPrice.setText("￥"+orderDetailed.getActualPrice());
+        viewHolder.buyPrice.setText(orderDetailed.getBuyPrice() +"元");
+        viewHolder.actualPrice.setText(orderDetailed.getActualPrice() +"元");
         String img = orderDetailed.getCommodityIcon();
         if (TextUtils.isEmpty(img)){
             viewHolder.commIcon.setImageResource(R.drawable.image_fail_empty);

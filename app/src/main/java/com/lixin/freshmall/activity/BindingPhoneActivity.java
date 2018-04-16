@@ -3,11 +3,15 @@ package com.lixin.freshmall.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
@@ -37,13 +41,15 @@ import okhttp3.Call;
  */
 
 public class BindingPhoneActivity extends BaseActivity implements View.OnClickListener{
-    private static final String TAG = "ForgetPwdActivity";
     private EditText edi_phone_number,edi_verification_code,edi_password,edi_password_again;
     private Button btn_fast_register,btn_verification_code;
+    private TextView mBindingPhoneProtocol;
+    private CheckBox mCheck;
     private Context mContext;
     private String code;
     private String login_password;
     private String thirdUid,nickName,userIcon,type;
+    private boolean isChoose = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +70,26 @@ public class BindingPhoneActivity extends BaseActivity implements View.OnClickLi
         edi_password_again = findViewById(R.id.edi_password_again);
         btn_verification_code = findViewById(R.id.btn_verification_code);
         btn_fast_register = findViewById(R.id.btn_fast_register);
+        mBindingPhoneProtocol = findViewById(R.id.text_binding_phone_protocol);
+        mBindingPhoneProtocol.setText(Html.fromHtml(getResources().getString(R.string.register_protocol)));
         edi_phone_number.setOnClickListener(this);
         edi_verification_code.setOnClickListener(this);
         edi_password.setOnClickListener(this);
         edi_password_again.setOnClickListener(this);
         btn_verification_code.setOnClickListener(this);
         btn_fast_register.setOnClickListener(this);
-
+        mBindingPhoneProtocol.setOnClickListener(this);
+        mCheck = findViewById(R.id.ck_binding_phone);
+        mCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    isChoose = true;
+                } else {
+                    isChoose = false;
+                }
+            }
+        });
     }
 
     @Override
@@ -95,6 +114,12 @@ public class BindingPhoneActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btn_fast_register:
                 submit();
+                break;
+            case R.id.text_binding_phone_protocol:
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("about",Constant.REGISTER);
+                bundle1.putString("title","注册协议");
+                MyApplication.openActivity(context,SettingAboutUsActivity.class,bundle1);
                 break;
         }
     }
@@ -124,6 +149,10 @@ public class BindingPhoneActivity extends BaseActivity implements View.OnClickLi
         }
         if (!StringUtils.isPwd(password)) {
             ToastUtils.makeText(mContext, "密码格式不正确，请核对后重新输入");
+            return;
+        }
+        if (!isChoose) {
+            ToastUtils.makeText(context, "请阅读并同意《溜哒兔注册协议》");
             return;
         }
         String user_phone = edi_phone_number.getText().toString().trim();
@@ -182,7 +211,7 @@ public class BindingPhoneActivity extends BaseActivity implements View.OnClickLi
      * @param CODE
      */
     public void sendSMS(String phone, String CODE) {
-        OkHttpUtils.post().url("https://v.juhe.cn/sms/send?").addParams("mobile", phone).addParams("tpl_id", "55840").addParams("tpl_value", "%23code%23%3d" + CODE).addParams("key", "140a6059cf053418d7b67543eeb4c17d").build().execute(new StringCallback() {
+        OkHttpUtils.post().url("https://v.juhe.cn/sms/send?").addParams("mobile", phone).addParams("tpl_id", "67567").addParams("tpl_value", "%23code%23%3d" + CODE).addParams("key", "140a6059cf053418d7b67543eeb4c17d").build().execute(new StringCallback() {
             @Override
             public void onResponse(String response, int id) {
                 try {

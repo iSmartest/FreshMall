@@ -39,9 +39,7 @@ public class GoEvaluateActivity extends BaseActivity {
         hideBack(2);
         setTitleText("商品评价");
         initView();
-
     }
-
     private void initView() {
         mContent = findViewById(R.id.edit_evaluate_dec);
         findViewById(R.id.text_evaluate_submit).setOnClickListener(new View.OnClickListener() {
@@ -68,7 +66,6 @@ public class GoEvaluateActivity extends BaseActivity {
             public void onError(Call call, Exception e, int id) {
                 ToastUtils.makeText(context, "网络异常");
             }
-
             @Override
             public void onResponse(String response, int id) {
                 Gson gson = new Gson();

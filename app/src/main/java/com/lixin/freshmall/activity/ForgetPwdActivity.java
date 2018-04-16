@@ -144,7 +144,7 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
      * @param phone
      */
     public void getPin(String phone, String CODE) {
-        OkHttpUtils.post().url("https://v.juhe.cn/sms/send?").addParams("mobile", phone).addParams("tpl_id", "55286").addParams("tpl_value", "%23code%23%3d" + CODE).addParams("key", "140a6059cf053418d7b67543eeb4c17d").build().execute(new StringCallback() {
+        OkHttpUtils.post().url("https://v.juhe.cn/sms/send?").addParams("mobile", phone).addParams("tpl_id", "67568").addParams("tpl_value", "%23code%23%3d" + CODE).addParams("key", "140a6059cf053418d7b67543eeb4c17d").build().execute(new StringCallback() {
             @Override
             public void onResponse(String response, int id) {
                 try {

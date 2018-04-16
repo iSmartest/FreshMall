@@ -13,12 +13,13 @@
             android:id="@+id/img_shop_gallery"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:background="@color/gray"
+            android:background="@color/app_main_default"
             app:indicator_drawable_selected="@drawable/dot_selected"
             app:indicator_drawable_unselected="@drawable/dot_unselected"
             app:indicator_height="7dp"
             app:indicator_margin="3dp"
-            app:indicator_width="7dp" />
+            app:indicator_width="7dp"
+            app:image_scale_type="fit_xy"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -35,7 +35,7 @@ public class TimerUtil {
     }
 
 
-    public CountDownTimer timer = new CountDownTimer(5000, 1000) {
+    public CountDownTimer timer = new CountDownTimer(60000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             tv.setEnabled(false);

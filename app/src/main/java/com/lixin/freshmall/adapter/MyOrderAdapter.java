@@ -51,7 +51,7 @@ import okhttp3.Call;
  * My mailbox is 1403241630@qq.com
  */
 
-public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderViewHolder>{
+public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderViewHolder> {
     private Context context;
     private List<MyOrderBean.Orders> mList;
     private List<GenerateOrderBean.commoditys> list;
@@ -60,6 +60,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
     private String mMoney;
     private int nowPage = 1;
     private LogOutDialog mLogOutDialog;
+
     public MyOrderAdapter(Context context, List<MyOrderBean.Orders> mList, String uid, String orderState) {
         this.context = context;
         this.mList = mList;
@@ -70,7 +71,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
 
     @Override
     public MyOrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_my_order_list,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_my_order_list, parent, false);
         MyOrderViewHolder viewHolder = new MyOrderViewHolder(view);
         return viewHolder;
     }
@@ -88,11 +89,11 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
     @Override
     public void onBindViewHolder(final MyOrderViewHolder viewHolder, final int position) {
         final MyOrderBean.Orders ordersList = mList.get(position);
-        viewHolder.order_number.setText("订单号："+ordersList.getOrderId());
-        OrderlistAdapter commodityAdapter = new OrderlistAdapter(ordersList.getOrderCommodity(),context);
+        viewHolder.order_number.setText("订单号：" + ordersList.getOrderId());
+        OrderlistAdapter commodityAdapter = new OrderlistAdapter(ordersList.getOrderCommodity(), context);
         viewHolder.commodity_lv.setAdapter(commodityAdapter);
         Utility.setListViewHeightBasedOnChildren(viewHolder.commodity_lv);
-        switch (orderState){
+        switch (orderState) {
             case "1":
                 viewHolder.order_state.setText("待付款");
                 viewHolder.bt_delete.setVisibility(View.VISIBLE);
@@ -101,14 +102,13 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                 viewHolder.bt_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        mLogOutDialog = new LogOutDialog(context, "确定取消订单吗？","取消","确定",new LogOutDialog.OnSureBtnClickListener() {
+                        mLogOutDialog = new LogOutDialog(context, "确定取消订单吗？", "取消", "确定", new LogOutDialog.OnSureBtnClickListener() {
                             @Override
                             public void sure() {
                                 mLogOutDialog.dismiss();
                                 int type = 0;
                                 mList.remove(position);
-                                getCancelOrder(ordersList.getOrderId(),type,position);
+                                getCancelOrder(ordersList.getOrderId(), type, position);
                             }
                         });
                         mLogOutDialog.show();
@@ -128,17 +128,17 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                 viewHolder.bt_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        initData(ordersList.getOrderId(),ordersList.getOderTotalPrice(),ordersList.getPaytime());
+                        initData(ordersList.getOrderId(), ordersList.getOderTotalPrice(), ordersList.getPaytime());
                     }
                 });
                 viewHolder.commodity_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("orderId",ordersList.getOrderId());
-                        bundle.putString("orderState",orderState);
-                        bundle.putString("payTime",ordersList.getPaytime());
-                        MyApplication.openActivity(context,OrderDecActivity.class,bundle);
+                        bundle.putString("orderId", ordersList.getOrderId());
+                        bundle.putString("orderState", orderState);
+                        bundle.putString("payTime", ordersList.getPaytime());
+                        MyApplication.openActivity(context, OrderDecActivity.class, bundle);
                     }
                 });
                 break;
@@ -149,15 +149,15 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                 viewHolder.bt_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                            mLogOutDialog = new LogOutDialog(context, "确定删除订单吗？","取消","确定",new LogOutDialog.OnSureBtnClickListener() {
-                                @Override
-                                public void sure() {
-                                    mLogOutDialog.dismiss();
-                                    int type = 1;
-                                    mList.remove(position);
-                                    getCancelOrder(ordersList.getOrderId(),type,position);
-                                }
-                            });
+                        mLogOutDialog = new LogOutDialog(context, "确定删除订单吗？", "取消", "确定", new LogOutDialog.OnSureBtnClickListener() {
+                            @Override
+                            public void sure() {
+                                mLogOutDialog.dismiss();
+                                int type = 1;
+                                mList.remove(position);
+                                getCancelOrder(ordersList.getOrderId(), type, position);
+                            }
+                        });
                         mLogOutDialog.show();
                     }
                 });
@@ -165,15 +165,15 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("orderId",ordersList.getOrderId());
-                        bundle.putString("orderState",orderState);
-                        bundle.putString("payTime",ordersList.getPaytime());
-                        MyApplication.openActivity(context,OrderDecActivity.class,bundle);
+                        bundle.putString("orderId", ordersList.getOrderId());
+                        bundle.putString("orderState", orderState);
+                        bundle.putString("payTime", ordersList.getPaytime());
+                        MyApplication.openActivity(context, OrderDecActivity.class, bundle);
                     }
                 });
                 break;
             case "4":
-                switch (ordersList.getOrderState()){
+                switch (ordersList.getOrderState()) {
                     case "4":
                         viewHolder.order_state.setText("退款中");
                         break;
@@ -189,9 +189,9 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                 viewHolder.bt_pay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context,RefundDecActivity.class);
+                        Intent intent = new Intent(context, RefundDecActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putString("orderId",ordersList.getOrderId());
+                        bundle.putString("orderId", ordersList.getOrderId());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
                     }
@@ -204,17 +204,17 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                 viewHolder.bt_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        initData(ordersList.getOrderId(),ordersList.getOderTotalPrice(),ordersList.getPaytime());
+                        initData(ordersList.getOrderId(), ordersList.getOderTotalPrice(), ordersList.getPaytime());
                     }
                 });
                 viewHolder.commodity_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("orderId",ordersList.getOrderId());
-                        bundle.putString("orderState",orderState);
-                        bundle.putString("payTime",ordersList.getPaytime());
-                        MyApplication.openActivity(context,OrderDecActivity.class,bundle);
+                        bundle.putString("orderId", ordersList.getOrderId());
+                        bundle.putString("orderState", orderState);
+                        bundle.putString("payTime", ordersList.getPaytime());
+                        MyApplication.openActivity(context, OrderDecActivity.class, bundle);
                     }
                 });
                 break;
@@ -223,7 +223,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
 
     private void getdata(final int position) {
         Map<String, String> params = new HashMap<>();
-        final String json="{\"cmd\":\"getWalletInfo\",\"nowPage\":\"" + nowPage +"\",\"uid\":\""
+        final String json = "{\"cmd\":\"getWalletInfo\",\"nowPage\":\"" + nowPage + "\",\"uid\":\""
                 + uid + "\"}";
         params.put("json", json);
         OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params)
@@ -232,6 +232,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
             public void onError(Call call, Exception e, int id) {
                 ToastUtils.makeText(context, e.getMessage());
             }
+
             @Override
             public void onResponse(String response, int id) {
                 Log.i("MyWalletActivity", "onResponse: " + response);
@@ -242,23 +243,23 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                     return;
                 }
                 Double temp = 0.00;
-                for (int i = 0; i < mList.get(position).getOrderCommodity().size() ; i++) {
-                    temp =  temp + Double.parseDouble(mList.get(position).getOrderCommodity().get(i).getCommodityNewPrice()) * Double.parseDouble(mList.get(position).getOrderCommodity().get(i).getCommodityBuyNum()) ;
+                for (int i = 0; i < mList.get(position).getOrderCommodity().size(); i++) {
+                    temp = temp + Double.parseDouble(mList.get(position).getOrderCommodity().get(i).getCommodityNewPrice()) * Double.parseDouble(mList.get(position).getOrderCommodity().get(i).getCommodityBuyNum());
                 }
                 list = new ArrayList<>();
                 for (int i = 0; i < mList.get(position).getOrderCommodity().size(); i++) {
                     MyOrderBean.Orders.orderCommodity mlist = mList.get(position).getOrderCommodity().get(i);
                     GenerateOrderBean.commoditys comm = new GenerateOrderBean.commoditys(mlist.getCommodityid(),
-                            mlist.getCommodityTitle(),mlist.getCommodityIcon()
-                            ,mlist.getCommodityFirstParam(),mlist.getCommoditySecondParam(),mlist.getCommodityNewPrice(),mlist.getCommodityBuyNum(),mlist.getCommodityUnit());
+                            mlist.getCommodityTitle(), mlist.getCommodityIcon()
+                            , mlist.getCommodityFirstParam(), mlist.getCommoditySecondParam(), mlist.getCommodityNewPrice(), mlist.getCommodityBuyNum(), mlist.getCommodityUnit());
                     list.add(comm);
                 }
                 mMoney = myWelletBean.getTotalMoney();
-                Intent intent = new Intent(context,NowBuyActivity.class);
+                Intent intent = new Intent(context, NowBuyActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("orderId",mList.get(position).getOrderId());
-                bundle.putString("mMoney",mMoney);
-                bundle.putDouble("totalPrice",temp);
+                bundle.putString("orderId", mList.get(position).getOrderId());
+                bundle.putString("mMoney", mMoney);
+                bundle.putDouble("totalPrice", temp);
                 bundle.putSerializable("OrderShop", (Serializable) list);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
@@ -268,7 +269,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
 
     private void getCancelOrder(String orderId, final int type, final int position) {
         Map<String, String> params = new HashMap<>();
-        final String json="{\"cmd\":\"deleteOrder\",\"orderId\":\"" + orderId +"\",\"uid\":\""
+        final String json = "{\"cmd\":\"deleteOrder\",\"orderId\":\"" + orderId + "\",\"uid\":\""
                 + uid + "\",\"type\":\"" + type + "\"}";
         params.put("json", json);
         Log.i("MyAllOrderFragment", "onResponse: " + json);
@@ -278,6 +279,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
             public void onError(Call call, Exception e, int id) {
                 ToastUtils.makeText(context, e.getMessage());
             }
+
             @Override
             public void onResponse(String response, int id) {
                 Log.i("MyAllOrderFragment", "onResponse: " + response);
@@ -287,16 +289,17 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                     ToastUtils.makeText(context, userInfo.getResultNote());
                     return;
                 }
-                if (type == 0){
-                    ToastUtils.makeText(context,"订单取消成功！");
+                if (type == 0) {
+                    ToastUtils.makeText(context, "订单取消成功！");
                     notifyDataSetChanged();
-                }else if (type == 1){
-                    ToastUtils.makeText(context,"订单删除成功！");
+                } else if (type == 1) {
+                    ToastUtils.makeText(context, "订单删除成功！");
                     notifyDataSetChanged();
                 }
             }
         });
     }
+
     class MyOrderViewHolder extends RecyclerView.ViewHolder {
         LinearLayout ll_order_list;
         TextView order_number;
@@ -317,23 +320,24 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
         }
     }
 
-    private void initData(final String orderId, final String totalPrice,final String paytime) {
-        String storeId = SPUtil.getString(context,"storeId");
-        Map<String,String> params = new HashMap<>();
-        String json = "{\"cmd\":\"getStoreInfoTime\",\"storeId\":\""+storeId+"\"}";
-        params.put("json",json);
+    private void initData(final String orderId, final String totalPrice, final String paytime) {
+        String storeId = SPUtil.getString(context, "storeId");
+        Map<String, String> params = new HashMap<>();
+        String json = "{\"cmd\":\"getStoreInfoTime\",\"storeId\":\"" + storeId + "\"}";
+        params.put("json", json);
         OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
-                ToastUtils.makeText(context,e.getMessage());
+                ToastUtils.makeText(context, e.getMessage());
             }
+
             @Override
             public void onResponse(String response, int id) {
-                Log.i("getStoreInfoTime", "onResponse: " +response );
+                Log.i("getStoreInfoTime", "onResponse: " + response);
                 Gson gson = new Gson();
-                StoreTimeBean storeTimeBean = gson.fromJson(response,StoreTimeBean.class);
-                if (storeTimeBean.getResult().equals("1")){
-                    ToastUtils.makeText(context,storeTimeBean.getResultNote());
+                StoreTimeBean storeTimeBean = gson.fromJson(response, StoreTimeBean.class);
+                if (storeTimeBean.getResult().equals("1")) {
+                    ToastUtils.makeText(context, storeTimeBean.getResultNote());
                     return;
                 }
                 int storeEndTime = storeTimeBean.getStoreEndTime();
@@ -344,20 +348,20 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderV
                 date = calendar.getTime(); //这个时间就是日期往后推一天的结果
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 String dateString = formatter.format(date);
-                if (dateString.equals(paytime)){
+                if (dateString.equals(paytime)) {
                     int currentTime = calendar.get(Calendar.HOUR_OF_DAY);
-                    if (currentTime >= storeEndTime){
-                        ToastUtils.makeText(context,"已过截止时间，不能退单了");
+                    if (currentTime >= storeEndTime) {
+                        ToastUtils.makeText(context, "已过截止时间，不能退单了");
                     } else {
-                        Intent intent = new Intent(context,WantRefundActivity.class);
+                        Intent intent = new Intent(context, WantRefundActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putString("orderId",orderId);
-                        bundle.putString("totalPrice",totalPrice);
+                        bundle.putString("orderId", orderId);
+                        bundle.putString("totalPrice", totalPrice);
                         intent.putExtras(bundle);
                         context.startActivity(intent);
                     }
-                }else {
-                    ToastUtils.makeText(context,"已过截止时间，不能退单了");
+                } else {
+                    ToastUtils.makeText(context, "已过截止时间，不能退单了");
                 }
             }
         });

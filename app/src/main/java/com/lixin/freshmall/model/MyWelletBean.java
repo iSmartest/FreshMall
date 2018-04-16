@@ -14,8 +14,6 @@ public class MyWelletBean {
     public String resultNote;
     public int totalPage;
     public String totalMoney;//钱包总钱数
-    public String sendAtmTime;
-    public String sendPtmTime;
     public List<moneyList> moneyList;
 
     public String getResult() {
@@ -50,22 +48,6 @@ public class MyWelletBean {
         this.totalMoney = totalMoney;
     }
 
-    public String getSendAtmTime() {
-        return sendAtmTime;
-    }
-
-    public void setSendAtmTime(String sendAtmTime) {
-        this.sendAtmTime = sendAtmTime;
-    }
-
-    public String getSendPtmTime() {
-        return sendPtmTime;
-    }
-
-    public void setSendPtmTime(String sendPtmTime) {
-        this.sendPtmTime = sendPtmTime;
-    }
-
     public List<MyWelletBean.moneyList> getMoneyList() {
         return moneyList;
     }
@@ -75,7 +57,7 @@ public class MyWelletBean {
     }
 
     public class moneyList{
-        public String moneySoure;//钱的来源：0补差、1退款、2消费
+        public String moneySoure;//钱的来源：0补差、1退款、2消费、3充值
         public String moneyNum;//钱的金额
         public String moneyTime;//返零钱的时间
         public String moneyType;//0代表系统返给用户的，1代表用户使用的零钱

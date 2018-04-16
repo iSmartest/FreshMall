@@ -14,7 +14,7 @@
     <string name="sure_delete_order">确定删除?</string>
     <string name="error_input_verification_fail_info">验证码错误:验证码由6位数字组成</string>
     <string name="tip_rate_err">您手机上没有可以评价的应用市场哦,\n下次再好评吧</string>
-    <string name="company_copyright">溜哒兔公司&#160;&#160;&#160;&#160;版权所有\nCopyright©2017&#8211;%d LiuDaTu.All Rights Reserved</string>
+    <string name="company_copyright">安徽外婆婆科技有限公司&#160;&#160;&#160;&#160;版权所有\nCopyright©2017&#8211;%d LiuDaTu.All Rights Reserved</string>
     <string name="version_format">溜哒兔:%s</string>
     <string name="delete_item">确定删除吗?</string>
     <string name="right_arrow">右箭头</string>
@@ -131,4 +131,8 @@
     <string name="user_protocol">用户协议</string>
     <string name="clear_cache">清除缓存</string>
     <string name="sign_out">退出</string>
+    <string name="agreement"><Data><![CDATA[已阅读并同意《<font color="#00ff00">溜哒兔</font>充值条款》]]></Data></string>
+    <string name="register_protocol"><Data><![CDATA[已阅读并同意《<font color="#00ff00">溜哒兔</font>注册协议》]]></Data></string>
+    <string name="get_reminder_notice">明天要记得去取货哦\n后天取货不保证质量\n第三天视为自动放弃</string>
+    <string name="send_reminder_notice">明天要记得查收货物\n联系方式要保持畅通\n无人接收视为自动放弃</string>
 </resources>

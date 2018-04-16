@@ -110,6 +110,7 @@ public class CartFragment extends BaseFragment implements View.OnClickListener ,
     }
 
     private void requestData() {
+        uid = SPUtil.getString(context,"uid");
         Map<String, String> params = new HashMap<>();
         final String json="{\"cmd\":\"getShopCarListInfo\",\"nowPage\":\"" + nowPage +"\",\"uid\":\""
                 + uid + "\",\"townId\":\"" + townId + "\"}";

@@ -2,10 +2,13 @@ package com.lixin.freshmall.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -27,6 +30,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 
 /**
@@ -39,10 +43,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private static final String TAG = "ForgetPwdActivity";
     private EditText edi_phone_number,edi_verification_code,edi_password,edi_password_again,edi_recommendation_code;
     private Button btn_fast_register,btn_verification_code;
-    private TextView mGoLogin;
+    private TextView mGoLogin,mRegisterProtocol;
+    private CheckBox mCheck;
     private Context mContext;
     private String code;
     private String logpwd;
+    private boolean isChoose = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,14 +67,27 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         edi_recommendation_code = findViewById(R.id.edi_recommendation_code);
         btn_fast_register = findViewById(R.id.btn_fast_register);
         mGoLogin = findViewById(R.id.text_register_go_login);
+        mRegisterProtocol = findViewById(R.id.text_register_protocol);
+        mRegisterProtocol.setText(Html.fromHtml(getResources().getString(R.string.register_protocol)));
         edi_phone_number.setOnClickListener(this);
         edi_verification_code.setOnClickListener(this);
         edi_password.setOnClickListener(this);
         edi_password_again.setOnClickListener(this);
         btn_verification_code.setOnClickListener(this);
         btn_fast_register.setOnClickListener(this);
+        mRegisterProtocol.setOnClickListener(this);
         mGoLogin.setOnClickListener(this);
-
+        mCheck = findViewById(R.id.ck_register);
+        mCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    isChoose = true;
+                } else {
+                    isChoose = false;
+                }
+            }
+        });
     }
 
     @Override
@@ -97,6 +116,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.text_register_go_login:
                 MyApplication.openActivity(RegisterActivity.this,LoginActivity.class);
                 finish();
+                break;
+            case R.id.text_register_protocol:
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("about",Constant.REGISTER);
+                bundle1.putString("title","注册协议");
+                MyApplication.openActivity(context,SettingAboutUsActivity.class,bundle1);
                 break;
         }
     }
@@ -133,6 +158,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             ToastUtils.makeText(mContext, "密码格式不正确，请核对后重新输入");
             return;
         }
+        if (!isChoose) {
+            ToastUtils.makeText(context, "请阅读并同意《溜哒兔注册协议》");
+            return;
+        }
         String userphone = edi_phone_number.getText().toString().trim();
         logpwd = password;
         try {
@@ -150,9 +179,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
      */
     private void userRegister(final String userPhone, final String password) {
         String RecommendCode = edi_recommendation_code.getText().toString().trim();
+        String token = JPushInterface.getRegistrationID(context);
         Map<String, String> params = new HashMap<>();
         final String json="{\"cmd\":\"userRegister\",\"userPhone\":\"" + userPhone + "\"," +
-                "\"password\":\"" + password +"\",\"invitation\":\""+RecommendCode+"\"}";
+                "\"password\":\"" + password +"\",\"invitation\":\""+RecommendCode+"\",\"token\":\""+token+"\"}";
         params.put("json", json);
         Log.i("6666", "userRegister: " + json);
 
@@ -188,7 +218,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
      * @param phone
      */
     public void sendSMS(String phone, String CODE) {
-        OkHttpUtils.post().url("https://v.juhe.cn/sms/send?").addParams("mobile", phone).addParams("tpl_id", "55288").addParams("tpl_value", "%23code%23%3d" + CODE).addParams("key", "140a6059cf053418d7b67543eeb4c17d").build().execute(new StringCallback() {
+        OkHttpUtils.post().url("https://v.juhe.cn/sms/send?").addParams("mobile", phone).addParams("tpl_id", "67501").addParams("tpl_value", "%23code%23%3d" + CODE).addParams("key", "140a6059cf053418d7b67543eeb4c17d").build().execute(new StringCallback() {
             @Override
             public void onResponse(String response, int id) {
                 try {

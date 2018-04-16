@@ -64,8 +64,8 @@ public class InvitingUsersActivity extends BaseActivity {
                 mShareAction.setDisplayList(SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
                         .withTitle("您的好友"+userName+"邀请您加入【溜哒兔】")
                         .withText("您的推荐码是:"+invitation+",赶快下载体验【溜哒兔】APP！")
-                        .withMedia(new UMImage(context, R.mipmap.ic_launcher))
-                        .withTargetUrl("http://www.zhlzw.com/UploadFiles/Article_UploadFiles/201204/20120412123929822.jpg")
+                        .withMedia(new UMImage(context, R.drawable.app_icon))
+                        .withTargetUrl("http://waipopo.cn")
                         .setCallback(umShareListener)
                         .open(config);
                 break;

@@ -67,15 +67,14 @@ public class CodeFragment extends BaseFragment implements SwipeFlingAdapterView.
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_code,container,false);
-        uid = SPUtil.getString(context,"uid");
         townId = SPUtil.getString(context,"TownId");
+        uid = SPUtil.getString(context,"uid");
         mList = new ArrayList<>();
         initView();
         getdata();
         return view;
 
     }
-
 
     private void initView() {
         RelativeLayout mToolbar = view.findViewById(R.id.rl_code_toolbar);
@@ -177,6 +176,7 @@ public class CodeFragment extends BaseFragment implements SwipeFlingAdapterView.
         @Override
         public void onReceive(Context context, final Intent intent) {
             //接到广播通知后刷新数据源
+            uid = SPUtil.getString(context,"uid");
             mList.clear();
             getdata();
         }

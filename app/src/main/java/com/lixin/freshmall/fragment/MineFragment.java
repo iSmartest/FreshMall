@@ -40,8 +40,6 @@ import com.lixin.freshmall.uitls.ImageManagerUtils;
 import com.lixin.freshmall.uitls.SPUtil;
 import com.lixin.freshmall.uitls.ToastUtils;
 import com.lixin.freshmall.view.RoundedImageView;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +56,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private View view;
     private RoundedImageView mUserIcon;
     private TextView mUserName, tvBalance, tvIntegral, tvCouponNum;
-    private String uid, userIcon, userName,userSex,invitation,telephone,aboutUs,userAgreement;
+    private String uid, userIcon, userName,userSex,invitation,telephone,aboutUs,userAgreement,mBalance;
     private LogOutDialog mLogOutDialog;
     @Override
     public void onAttach(Activity activity) {
@@ -155,10 +153,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 telephone = mUserInfo.getCustomerService();
                 aboutUs = mUserInfo.getAboutUs();
                 userAgreement = mUserInfo.getUserAgreement();
-                if (TextUtils.isEmpty(mUserInfo.getBalance())){
+                mBalance = mUserInfo.getBalance();
+                if (TextUtils.isEmpty(mBalance)){
                     tvBalance.setText("￥0.00元");
                 }else {
-                    tvBalance.setText("￥" + mUserInfo.getBalance() + "元");
+                    tvBalance.setText("￥" + mBalance + "元");
                 }
                 if (TextUtils.isEmpty(mUserInfo.getIntegral())){
                     tvIntegral.setText("0分");
@@ -217,7 +216,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 if (TextUtils.isEmpty(uid)) {
                     MyApplication.openActivity(getActivity(), LoginActivity.class);
                 } else {
-                    MyApplication.openActivity(getActivity(), MyBalanceActivity.class);
+                    Bundle bundleBalance = new Bundle();
+                    bundleBalance.putString("mBalance",mBalance);
+                    MyApplication.openActivity(getActivity(), MyBalanceActivity.class,bundleBalance);
                 }
                 break;
             case R.id.linear_mine_integral:
@@ -336,24 +337,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
         }
     }
-    private UMShareListener umShareListener = new UMShareListener() {
-        @Override
-        public void onResult(SHARE_MEDIA platform) {
-            Log.d("plat", "platform" + platform);
-            ToastUtils.makeText(context, "分享成功啦");
-        }
-        @Override
-        public void onError(SHARE_MEDIA platform, Throwable t) {
-            ToastUtils.makeText(context, "分享失败啦");
-            if (t != null) {
-                Log.d("throw", "throw:" + t.getMessage());
-            }
-        }
-        @Override
-        public void onCancel(SHARE_MEDIA platform) {
-            ToastUtils.makeText(context, "分享取消了");
-        }
-    };
 
     private BroadcastReceiver mAllBroad = new BroadcastReceiver() {
         @Override

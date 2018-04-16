@@ -78,24 +78,26 @@ public class NowBuyActivity extends BaseActivity {
     private int storeEndTime, currentTime;
     private LinearLayout mLinearBalance, mLinearChooseTime, mLyDistributionFee;
     private ArrayList<? extends GenerateOrderBean.commoditys> mList;
-    private TextView totalPrice, tvChooseTime, tvChooseData, tvShoppingBag, tvCoupon, mBalance, mSure, mTvOk;
-    private Double mTotalPrice, mTempTotalPrice, money, allPrice, Surplus, totalMoney, reducePrice = 0.00, shoppingBagPrice = 0.00, temp = 0.00, free = 0.00, fullFree = 0.00;
-    private String orderId, mMoney, storeName, storeAddress, storePhone, storeId, addressId, address, userName, phone, dateString, channel, issend, getTime = "", sendTime = "", couponId = "", shoppingBag = "";
-    private TextView mStoreName, mStorePhone, mStoreAddress, mAddressTitle, mReservationData, mReservationTime, mGetGoods, mSendGoods, mDistributionFee;
+    private TextView totalPrice,tvChooseTime,tvChooseData,tvShoppingBag,tvCoupon,mBalance,mSure,mTvOk;
+    private Double mTotalPrice, mTempTotalPrice, money, allPrice, Surplus, totalMoney, reducePrice = 0.00
+            , shoppingBagPrice = 0.00, temp = 0.00, free = 0.00, fullFree = 0.00,sendFree = 0.00;
+    private String orderId, mMoney, storeName, storeAddress, storePhone, storeId, addressId, address,
+            userName, phone, dateString, channel, issend, getTime = "", sendTime = "", couponId = ""
+            , shoppingBag = "",orderState = "2";
+    private TextView mStoreName, mStorePhone, mStoreAddress, mAddressTitle, mReservationData, mReservationTime
+            , mGetGoods, mSendGoods, mDistributionFee;
     private boolean mChooseMode = true;
     private Dialog progressDlg;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_now_buy);
         hideBack(2);
         setTitleText("立即购买");
-        Intent intent = getIntent();
-        mList = intent.getParcelableArrayListExtra("OrderShop");
-        orderId = intent.getStringExtra("orderId");
-        mMoney = intent.getStringExtra("mMoney");
-        mTotalPrice = intent.getDoubleExtra("totalPrice", 1);
+        mList = getIntent().getParcelableArrayListExtra("OrderShop");
+        orderId = getIntent().getStringExtra("orderId");
+        mMoney = getIntent().getStringExtra("mMoney");
+        mTotalPrice = getIntent().getDoubleExtra("totalPrice", 1);
         mTempTotalPrice = mTotalPrice;
         money = Double.parseDouble(mMoney);
         storeName = SPUtil.getString(context, "storeName");
@@ -139,15 +141,11 @@ public class NowBuyActivity extends BaseActivity {
                 }
                 issend = storeTimeBean.getIssend();
                 fullFree = storeTimeBean.getSendAllMoney();
-                if (mTotalPrice >= fullFree) {
-                    free = 0.0;
-                } else {
-                    free = storeTimeBean.getSendMoney();
-                }
+                sendFree = storeTimeBean.getSendMoney();
+                storeEndTime = storeTimeBean.getStoreEndTime();
             }
         });
     }
-
 
     private void initView() {
         now_buy_list = findViewById(R.id.now_buy_list);
@@ -205,7 +203,9 @@ public class NowBuyActivity extends BaseActivity {
             cursor_get.setVisibility(View.VISIBLE);
             mLyDistributionFee.setVisibility(View.GONE);
             mTotalPrice = mTempTotalPrice;
+            free = 0.00;
             totalPrice.setText("" + mTotalPrice);
+            orderState = "2";
         } else {
             mAddressTitle.setText("送货地址");
             mStoreName.setText(" ");
@@ -220,12 +220,15 @@ public class NowBuyActivity extends BaseActivity {
             cursor_send.setVisibility(View.VISIBLE);
             mLyDistributionFee.setVisibility(View.VISIBLE);
             if (fullFree <= mTotalPrice) {
+                free = 0.0;
                 mDistributionFee.setText("免配送费");
             } else {
+                free = sendFree;
                 mDistributionFee.setText(free + "(满" + fullFree + "免配送费)");
             }
             mTotalPrice = mTotalPrice + free;
             totalPrice.setText("" + mTotalPrice);
+            orderState = "5";
         }
     }
 
@@ -346,10 +349,9 @@ public class NowBuyActivity extends BaseActivity {
             if (TextUtils.isEmpty(getTime)) {
                 ToastUtils.makeText(NowBuyActivity.this, "请预约取货时间");
             } else {
-                storeEndTime = SPUtil.getInt(context, "storeEndTime", 0);
                 Calendar calendar = Calendar.getInstance();
                 currentTime = calendar.get(Calendar.HOUR_OF_DAY);
-                if (currentTime > storeEndTime) {
+                if (currentTime >= storeEndTime) {
                     ToastUtils.makeText(context, "现在下单已经来不及了，明天再下单吧！");
                     return;
                 }
@@ -363,10 +365,9 @@ public class NowBuyActivity extends BaseActivity {
             if (TextUtils.isEmpty(sendTime)) {
                 ToastUtils.makeText(NowBuyActivity.this, "请预约收货时间");
             } else {
-                storeEndTime = SPUtil.getInt(context, "storeEndTime", 0);
                 Calendar calendar = Calendar.getInstance();
                 currentTime = calendar.get(Calendar.HOUR_OF_DAY);
-                if (currentTime > storeEndTime) {
+                if (currentTime >= storeEndTime) {
                     ToastUtils.makeText(context, "现在下单已经来不及了，明天再下单吧！");
                     return;
                 }
@@ -386,8 +387,7 @@ public class NowBuyActivity extends BaseActivity {
         params.put("json", json);
         Log.i("NowBuyActivity", "onResponse: " + json);
         dialog1.show();
-        OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params)
-                .build().execute(new StringCallback() {
+        OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 ToastUtils.makeText(context, e.getMessage());
@@ -413,7 +413,13 @@ public class NowBuyActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setAction("com.freshmall.code.changed");
                     getApplicationContext().sendBroadcast(intent);
-                    ToastUtils.makeText(NowBuyActivity.this, "商品购买成功！");
+                    Bundle bundle = new Bundle();
+                    bundle.putString("oderPayPrice",(mTotalPrice + shoppingBagPrice) + "");
+                    bundle.putString("data",dateString);
+                    bundle.putString("time",tvChooseTime.getText().toString().trim());
+                    bundle.putString("orderId",orderId);
+                    bundle.putString("orderState",orderState);
+                    MyApplication.openActivity(context,PaySuccessActivity.class,bundle);
                     finish();
                 } else {
                     ToastUtils.makeText(NowBuyActivity.this, "订单提交成功！");
@@ -447,7 +453,7 @@ public class NowBuyActivity extends BaseActivity {
                         ToastUtils.makeText(context, "请选择支付方式");
                         return;
                     }
-                    ThreePayment(mtotalMoney, "溜达兔", type, orderId);
+                    ThreePayment(mtotalMoney, "溜哒兔", type, orderId);
                 }
             });
             radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -525,15 +531,14 @@ public class NowBuyActivity extends BaseActivity {
                 payParams.billTitle = boby;   //订单标题
                 payParams.billTotalFee = amount;    //订单金额(分)
                 payParams.billNum = orderId;  //订单流水号
-//              payParams.couponId = "bbbf835d-f6b0-484f-bb6e-8e6082d4a35f";    // 优惠券ID
                 payParams.optional = mapOptional;            //扩展参数(可以null)
                 BCPay.getInstance(context).reqPaymentAsync(payParams, bcCallback);
             } else {
                 ToastUtils.makeText(context, "您尚未安装微信或者安装的微信版本不支持");
-                dialog1.dismiss();
+                progressDlg.dismiss();
             }
         } else {
-            dialog1.show();
+            progressDlg.show();
             Map<String, String> mapOptional = new HashMap<>();
             BCPay.PayParams aliParam = new BCPay.PayParams();
             aliParam.channelType = BCReqParams.BCChannelTypes.ALI_APP;
@@ -549,7 +554,7 @@ public class NowBuyActivity extends BaseActivity {
         @Override
         public void done(final BCResult bcResult) {
             final BCPayResult bcPayResult = (BCPayResult) bcResult;
-            dialog1.dismiss();
+            progressDlg.dismiss();
             String result = bcPayResult.getResult();
             Message msg = mHandler.obtainMessage();
             if (result.equals(BCPayResult.RESULT_SUCCESS)) {
@@ -569,7 +574,6 @@ public class NowBuyActivity extends BaseActivity {
             } else {
                 msg.what = 5;
             }
-
             mHandler.sendMessage(msg);
 
         }
@@ -588,8 +592,13 @@ public class NowBuyActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setAction("com.freshmall.code.changed");
                     getApplicationContext().sendBroadcast(intent);
-//                  LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                    ToastUtils.makeText(context, "订单支付成功");
+                    Bundle bundle = new Bundle();
+                    bundle.putString("oderPayPrice",totalPrice.getText().toString().trim());
+                    bundle.putString("data",dateString);
+                    bundle.putString("time",tvChooseTime.getText().toString().trim());
+                    bundle.putString("orderId",orderId);
+                    bundle.putString("orderState",orderState);
+                    MyApplication.openActivity(context,PaySuccessActivity.class,bundle);
                     finish();
                     break;
                 case 2:

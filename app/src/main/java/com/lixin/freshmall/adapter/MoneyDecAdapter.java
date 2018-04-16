@@ -54,6 +54,9 @@ public class MoneyDecAdapter  extends RecyclerView.Adapter<MoneyDecAdapter. Mone
                 case "2":
                     viewHolder.mMoneySoure.setText("消费");
                     break;
+                case "3":
+                    viewHolder.mMoneySoure.setText("充值");
+                    break;
                 default:
                     break;
             }
@@ -61,10 +64,10 @@ public class MoneyDecAdapter  extends RecyclerView.Adapter<MoneyDecAdapter. Mone
 
         if (!TextUtils.isEmpty(moneyList.getMoneyType())){
             if (moneyList.getMoneyType().equals("0")){
-                viewHolder.mMoneyNum.setText("+"+moneyList.getMoneyNum());
+                viewHolder.mMoneyNum.setText("+"+moneyList.getMoneyNum() + "元");
                 viewHolder.mMoneyNum.setTextColor(csl2);
             }else {
-                viewHolder.mMoneyNum.setText("-"+moneyList.getMoneyNum());
+                viewHolder.mMoneyNum.setText("-"+moneyList.getMoneyNum() + "元");
                 viewHolder.mMoneyNum.setTextColor(csl1);
             }
         }

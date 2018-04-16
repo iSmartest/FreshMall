@@ -105,7 +105,6 @@
             android:src="@drawable/home_message"
             android:visibility="visible"
             android:contentDescription="@string/message_icon"/>
-
     </RelativeLayout>
     <com.example.xrecyclerview.XRecyclerView
         android:id="@+id/home_list"

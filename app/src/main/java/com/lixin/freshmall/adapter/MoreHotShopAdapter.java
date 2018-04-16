@@ -23,9 +23,10 @@ import java.util.List;
  * My mailbox is 1403241630@qq.com
  */
 
-public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.MoreShopViewHolder>{
+public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.MoreShopViewHolder> {
     private Context context;
     private List<MoreShopBean.moreCommoditys> mList;
+
     public MoreHotShopAdapter(Context context, List<MoreShopBean.moreCommoditys> mList) {
         this.context = context;
         this.mList = mList;
@@ -33,7 +34,7 @@ public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.
 
     @Override
     public MoreShopViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_more_grid_shop,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_more_grid_shop, parent, false);
         MoreShopViewHolder viewHolder = new MoreShopViewHolder(view);
         return viewHolder;
     }
@@ -44,16 +45,16 @@ public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.
         viewHolder.mShopName.setText(moreCommoditys.getCommodityTitle());
         viewHolder.mNowPrice.setText(moreCommoditys.getCommodityNewPrice() + "元/" + moreCommoditys.getCommodityUnit());
         viewHolder.mMarketPrice.setText("市场价:" + moreCommoditys.getCommodityOriginalPrice() + "元/" + moreCommoditys.getCommodityUnit());
-        viewHolder.mMarketPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
+        viewHolder.mMarketPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
         String img = moreCommoditys.getCommodityIcon();
-        if (TextUtils.isEmpty(img)){
+        if (TextUtils.isEmpty(img)) {
             viewHolder.mPicture.setImageResource(R.drawable.image_fail_empty);
-        }else {
-            ImageManagerUtils.imageLoader.displayImage(img,viewHolder.mPicture,ImageManagerUtils.options3);
+        } else {
+            ImageManagerUtils.imageLoader.displayImage(img, viewHolder.mPicture, ImageManagerUtils.options3);
         }
-        if (moreCommoditys.getIsSoldOut().equals("1")){
+        if (moreCommoditys.getIsSoldOut().equals("1")) {
             viewHolder.mSaleState.setVisibility(View.VISIBLE);
-        }else if (moreCommoditys.getIsSoldOut().equals("2")){
+        } else if (moreCommoditys.getIsSoldOut().equals("2")) {
             viewHolder.mSaleState.setVisibility(View.GONE);
         }
     }
@@ -68,9 +69,9 @@ public class MoreHotShopAdapter extends RecyclerView.Adapter<MoreHotShopAdapter.
         return mList == null ? 0 : mList.size();
     }
 
-    class MoreShopViewHolder extends RecyclerView.ViewHolder{
+    class MoreShopViewHolder extends RecyclerView.ViewHolder {
         ImageView mPicture;
-        TextView mShopName,mNowPrice,mMarketPrice,mSaleState;
+        TextView mShopName, mNowPrice, mMarketPrice, mSaleState;
 
         public MoreShopViewHolder(View itemView) {
             super(itemView);

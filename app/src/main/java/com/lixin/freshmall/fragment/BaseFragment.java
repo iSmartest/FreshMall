@@ -22,6 +22,8 @@ public class BaseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        dialog = ProgressDialog.createLoadingDialog(context, "加载中.....");
+        if (dialog == null){
+            dialog = ProgressDialog.createLoadingDialog(context, "加载中.....");
+        }
     }
 }

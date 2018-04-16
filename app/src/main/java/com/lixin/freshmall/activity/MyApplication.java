@@ -30,9 +30,7 @@ import cn.jpush.android.api.JPushInterface;
 public class MyApplication extends Application {
     public static Context CONTEXT;
     private static MyApplication myApplication;
-    public static int secondId = 0;
-    public static int temp = 0;
-    public static int shopCart = 0;
+    public static int defaultItem = 0;
     public static int shopPay = 0;
     public static int evaluate = 0;
     @Override

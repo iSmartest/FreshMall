@@ -1,21 +1,21 @@
 package com.lixin.freshmall.activity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
@@ -24,6 +24,7 @@ import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.UserInfo;
 import com.lixin.freshmall.okhttp.OkHttpUtils;
 import com.lixin.freshmall.okhttp.budiler.StringCallback;
+import com.lixin.freshmall.uitls.AppManager;
 import com.lixin.freshmall.uitls.Md5Util;
 import com.lixin.freshmall.uitls.SPUtil;
 import com.lixin.freshmall.uitls.StringUtils;
@@ -45,40 +46,38 @@ import okhttp3.Call;
  * My mailbox is 1403241630@qq.com
  */
 
-public class LoginActivity extends Activity implements View.OnClickListener{
-    private static final String TAG = "LoginActivity";
+public class LoginActivity extends BaseActivity implements View.OnClickListener{
+    private static final String TAG = "ssss";
     private EditText et_userphone,et_password;
     private TextView tv_forgetPassword,tv_register, iv_qqlogin, iv_weixinlogin;
     private Button btn_login;
     private Dialog progressDlg;
-    protected Context context;
-    protected Dialog dialog1;
     private UMShareAPI mShareAPI;
     private SHARE_MEDIA platform;
-    private boolean isSkip = true;
+
     private String type = null;
     private String screen_name = null, profile_image_url = null, openid = null,phoneNum = null;
+    // 定义一个变量，来标识是否退出
+    private static boolean isExit = false;
+    private int isSkip = 0;
+    Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        showKitKat();
         setContentView(R.layout.activity_login);
         mShareAPI = UMShareAPI.get(this);
-        context = this;
-        dialog1 = ProgressDialog.createLoadingDialog(context, "加载中.....");
+        isSkip = getIntent().getIntExtra("isSkip",0);
         initView();
         initData();
         initListener();
-        isSkip = false;
-    }
-    private void showKitKat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window window =getWindow();
-            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
+
     }
     private void initView() {
         iv_qqlogin = findViewById(R.id.iv_qq_login);
@@ -194,12 +193,13 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 profile_image_url = map.get("profile_image_url");//头像
                 openid = map.get("openid");//第三方平台id
             } else if (SHARE_MEDIA.WEIXIN.equals(share_media)) {
+                Log.i(TAG, "onComplete: " + map);
                 screen_name = map.get("screen_name");//昵称
                 profile_image_url = map.get("profile_image_url");//头像
                 openid = map.get("openid");//第三方平台id
                 phoneNum = map.get("phoneNum");
                 Log.i(TAG, "thirdLogin: " + screen_name);
-                Log.i("", "onComplete: " + "授权成功了");
+                Log.i("ssss", "onComplete: " + "授权成功了");
             }
             thirdLogin(openid, screen_name, profile_image_url,"");
         }
@@ -253,20 +253,23 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                     @Override
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
+                        dialog1.dismiss();
                         UserInfo bean = gson.fromJson(response, UserInfo.class);
                         if ("0".equals(bean.getResult())) {
                             ToastUtils.makeText(context, "登录成功");
                             Log.i(TAG, "onResponse: " + response);
                             SPUtil.putString(context, "uid", bean.getUid());
-                            MyApplication.openActivity(context, MainActivity.class);
                             Intent intent = new Intent();
                             intent.setAction("com.freshmall.mine.changed");
                             getApplicationContext().sendBroadcast(intent);
-                            finish();
-                            dialog1.dismiss();
+                            if (isSkip == 0){
+                                finish();
+                            }else {
+                                finish();
+                                MyApplication.openActivity(context, MainActivity.class);
+                            }
                         } else {
                             ToastUtils.makeText(context, bean.getResultNote());
-                            dialog1.dismiss();
                         }
                     }
                 });
@@ -307,9 +310,14 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                                 SPUtil.putString(context, "userIcon", bean.getUserIcon());
                                 Intent intent = new Intent();
                                 intent.setAction("com.freshmall.mine.changed");
+                                intent.setAction("com.freshmall.code.changed");
                                 getApplicationContext().sendBroadcast(intent);
-                                MyApplication.openActivity(context, MainActivity.class);
-                                finish();
+                                if (isSkip == 0){
+                                    finish();
+                                }else {
+                                    finish();
+                                    MyApplication.openActivity(context, MainActivity.class);
+                                }
                             }else if (bean.getIsFirst().equals("1")){
                                 Bundle bundle = new Bundle();
                                 bundle.putString("thirdUid",thirdUid);
@@ -320,9 +328,28 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                             }
                         } else {
                             ToastUtils.makeText(context, bean.getResultNote());
-                            dialog1.dismiss();
                         }
                     }
                 });
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void exit() {
+        if (!isExit) {
+            isExit = true;
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            mHandler.sendEmptyMessageDelayed(0, 3000);
+        } else {
+            AppManager.finishAllActivity();
+            System.exit(0);
+        }
     }
 }

@@ -46,7 +46,6 @@
         <activity android:name=".activity.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -105,6 +104,10 @@
             android:screenOrientation="portrait"/>
         <!--立即购买-->
         <activity android:name=".activity.NowBuyActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <!--支付成功-->
+        <activity android:name=".activity.PaySuccessActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <!--购物袋-->

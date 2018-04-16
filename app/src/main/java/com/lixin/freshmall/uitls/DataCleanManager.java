@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 public class DataCleanManager {
     /**
      * 获取缓存大小
+     *
      * @param context
      * @return
      * @throws Exception
@@ -29,6 +30,7 @@ public class DataCleanManager {
 
     /**
      * 清除缓存
+     *
      * @param context
      */
     public static void clearAllCache(Context context) {
@@ -74,6 +76,7 @@ public class DataCleanManager {
 
     /**
      * 格式化单位
+     *
      * @param size
      * @return
      */
@@ -81,7 +84,7 @@ public class DataCleanManager {
         double kiloByte = size / 1024;
         if (kiloByte < 1) {
 //            return size + "Byte";
-            return "已清除";
+            return "OK";
         }
 
         double megaByte = kiloByte / 1024;

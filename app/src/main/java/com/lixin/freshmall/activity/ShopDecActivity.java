@@ -36,6 +36,7 @@ import com.lixin.freshmall.fragment.IntroduceFragment;
 import com.lixin.freshmall.fragment.SpecFragment;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.GenerateOrderBean;
+import com.lixin.freshmall.model.MaxBuyNum;
 import com.lixin.freshmall.model.ShopDecBean;
 import com.lixin.freshmall.model.SkuBean;
 import com.lixin.freshmall.model.UserInfo;
@@ -73,7 +74,7 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
     private TextView[] mTextView;
     private ImageView IvCollection;
     private double totalPrice = 0.00;
-    private int temp,collectType,flag;
+    private int temp, collectType, flag;
     private SpecFragment mSpecFragment;
     private LinearLayout[] mLinearLayout;
     private SeePictureDialog mSeePictureDialog;
@@ -83,9 +84,9 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
     private List<ShopDecBean.commoditySelectParameters> mList;
     private StatementSettlementDialog mStatementSettlementDialog;
     private List<String> rotateCommodityList = new ArrayList<>();
-    private String rotateid, rotateIcon, mtitle, newPrice, townId, mShopUnit,url, uid, orderId, mMoney,commodityPrice,maxBuyNum,mInventory = "0";
-    private TextView mShopName, mSalesVolume, mNowPrice, mMarketValue, TextCollection, mBuyNow, mAddShoppingCart, mLimitedNum,mStatementSettlement;
-
+    private String rotateid, rotateIcon, mtitle, newPrice, townId, mShopUnit, url, uid, orderId, mMoney, commodityPrice, maxBuyNum, mInventory = "0";
+    private TextView mShopName, mSalesVolume, mNowPrice, mMarketValue, TextCollection, mBuyNow, mAddShoppingCart, mLimitedNum, mStatementSettlement;
+    private boolean isLimitBuy = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +94,6 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
         Intent intent = getIntent();
         context = this;
         dialog = ProgressDialog.createLoadingDialog(context, "加载中.....");
-
         mList = new ArrayList<>();
         rotateid = intent.getStringExtra("rotateid");
         rotateIcon = intent.getStringExtra("rotateIcon");
@@ -101,6 +101,12 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
         townId = SPUtil.getString(ShopDecActivity.this, "TownId");
         initView();
         getdata();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        uid = SPUtil.getString(ShopDecActivity.this, "uid");
     }
 
     private void initView() {
@@ -189,7 +195,7 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                     ToastUtils.makeText(ShopDecActivity.this, shopDecBean.getResultNote());
                 }
                 List<String> rotateCommodityPics = shopDecBean.rotateCommodityPics;
-                if (rotateCommodityPics != null && !rotateCommodityPics.isEmpty() && rotateCommodityPics.size() != 0){
+                if (rotateCommodityPics != null && !rotateCommodityPics.isEmpty() && rotateCommodityPics.size() != 0) {
                     rotateCommodityList.addAll(rotateCommodityPics);
                     initTopViewData(rotateCommodityPics);
                 }
@@ -201,16 +207,18 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                 mNowPrice.setText(shopDecBean.getCommodityNewPrice() + "元/" + shopDecBean.getCommodityUnit());
                 newPrice = shopDecBean.getCommodityNewPrice();
                 mMarketValue.setText("市场价:" + shopDecBean.getCommodityOriginalPrice() + "元/" + shopDecBean.getCommodityUnit());
-                if (shopDecBean.getCommodityUnit().equals("斤")){
+                if (shopDecBean.getCommodityUnit().equals("斤")) {
                     mStatementSettlement.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     mStatementSettlement.setVisibility(View.GONE);
                 }
                 if (shopDecBean.getCommodityMaxLimitationNum().length() == 0) {
                     mLimitedNum.setVisibility(View.INVISIBLE);
+                    isLimitBuy = false;
                 } else {
                     mLimitedNum.setVisibility(View.VISIBLE);
                     mLimitedNum.setText("每个用户限量购买" + shopDecBean.getCommodityMaxLimitationNum() + "个");
+                    isLimitBuy = true;
                 }
                 if (TextUtils.isEmpty(shopDecBean.getCommodityMaxBuyNum())) {
                     maxBuyNum = "";
@@ -250,8 +258,8 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
 
     @Override
     public void OnBannerClick(int position) {
-        if (rotateCommodityList != null && ! rotateCommodityList.isEmpty()){
-            mSeePictureDialog = new SeePictureDialog(context,rotateCommodityList);
+        if (rotateCommodityList != null && !rotateCommodityList.isEmpty()) {
+            mSeePictureDialog = new SeePictureDialog(context, rotateCommodityList);
             mSeePictureDialog.show();
         }
     }
@@ -274,7 +282,7 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                 break;
             case R.id.linear_shop_dec_collection:
                 if (TextUtils.isEmpty(uid)) {
-                    ToastUtils.makeText(ShopDecActivity.this, "请登录");
+                    MyApplication.openActivity(context,LoginActivity.class);
                 } else {
                     if (temp == 0) {
                         collectType = 1;
@@ -286,43 +294,22 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                 }
                 break;
             case R.id.text_shop_dec_buy_now:
-                if (maxBuyNum.equals("0")){
-                    ToastUtils.makeText(context,"该商品已达今日购买上限");
-                    return;
-                }
-                list = new ArrayList<>();
                 if (TextUtils.isEmpty(uid)) {
-                    ToastUtils.makeText(ShopDecActivity.this, "请登录");
+                    MyApplication.openActivity(context,LoginActivity.class);
                 } else {
-                    if (mList.isEmpty()) {
-                        GenerateOrderBean.commoditys comm = new GenerateOrderBean.commoditys(rotateid,
-                                mtitle, rotateIcon, "", "", newPrice, "1",mShopUnit);
-                        list.add(comm);
-                        getOrderData(list);
-                        totalPrice = Double.valueOf(newPrice);
-                    } else {
-                        flag = 0;
-                        CommodityAttribute mCommodityAttribute = new CommodityAttribute(ShopDecActivity.this);
-                        mCommodityAttribute.showAtLocation(mBuyNow, Gravity.BOTTOM, 0, 0);
-                    }
+                    getMaxBuyNum(0);
                 }
                 break;
             case R.id.text_shop_dec_add_shopping_cart:
                 if (TextUtils.isEmpty(uid)) {
-                    ToastUtils.makeText(ShopDecActivity.this, "请登录");
+                    MyApplication.openActivity(context,LoginActivity.class);
                 } else {
-                    if (mList.isEmpty()) {
-                        getAddShoppingCart(1, "", "");
-                    } else {
-                        flag = 1;
-                        CommodityAttribute mCommodityAttribute1 = new CommodityAttribute(ShopDecActivity.this);
-                        mCommodityAttribute1.showAtLocation(mAddShoppingCart, Gravity.BOTTOM, 0, 0);
-                    }
+                    getMaxBuyNum(1);
                 }
                 break;
             case R.id.linear_shop_dec_select_attribute:
                 if (TextUtils.isEmpty(uid)) {
-                    ToastUtils.makeText(ShopDecActivity.this, "请登录");
+                    MyApplication.openActivity(context,LoginActivity.class);
                 } else {
                     if (mList.isEmpty()) {
                         ToastUtils.makeText(context, "暂无可选口味");
@@ -341,10 +328,64 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
         }
     }
 
+    private void getMaxBuyNum(final int position) {
+        final Map<String, String> params = new HashMap<>();
+        final String json = "{\"cmd\":\"getCommoditysNum\",\"commodityid\":\"" + rotateid + "\",\"uid\":\"" + uid + "\"}";
+        params.put("json", json);
+        OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params).build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                ToastUtils.makeText(context, e.getMessage());
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                Log.i("dsd", "onResponse: " + response);
+                Gson gson = new Gson();
+                MaxBuyNum maxBuyNumBean = gson.fromJson(response, MaxBuyNum.class);
+                if (maxBuyNumBean.getResult().equals("1")) {
+                    ToastUtils.makeText(context, maxBuyNumBean.getResultNote());
+                    return;
+                }
+                if (TextUtils.isEmpty(maxBuyNumBean.getCommodityMaxBuyNum())) {
+                    maxBuyNum = "";
+                } else {
+                    maxBuyNum = maxBuyNumBean.getCommodityMaxBuyNum();
+                }
+                if (maxBuyNum.equals("0")) {
+                    ToastUtils.makeText(context, "该商品已达今日购买上限");
+                    return;
+                }
+                if (position == 1) {
+                    if (mList.isEmpty()) {
+                        getAddShoppingCart(1, "", "");
+                    } else {
+                        flag = 1;
+                        CommodityAttribute mCommodityAttribute1 = new CommodityAttribute(ShopDecActivity.this);
+                        mCommodityAttribute1.showAtLocation(mAddShoppingCart, Gravity.BOTTOM, 0, 0);
+                    }
+                } else if (position == 0) {
+                    list = new ArrayList<>();
+                    if (mList.isEmpty()) {
+                        GenerateOrderBean.commoditys comm = new GenerateOrderBean.commoditys(rotateid,
+                                mtitle, rotateIcon, "", "", newPrice, "1", mShopUnit);
+                        list.add(comm);
+                        getOrderData(list);
+                        totalPrice = Double.valueOf(newPrice);
+                    } else {
+                        flag = 0;
+                        CommodityAttribute mCommodityAttribute = new CommodityAttribute(ShopDecActivity.this);
+                        mCommodityAttribute.showAtLocation(mBuyNow, Gravity.BOTTOM, 0, 0);
+                    }
+                }
+            }
+        });
+    }
+
     private void getCollection(final int collectType) {
         Map<String, String> params = new HashMap<>();
         final String json = "{\"cmd\":\"collectCommoditys\",\"commodityid\":\"" + rotateid + "\",\"uid\":\"" + uid + "\",\"collectType\":" +
-                "\"" + collectType + "\",\"townId\":\""+townId+"\"}";
+                "\"" + collectType + "\",\"townId\":\"" + townId + "\"}";
         params.put("json", json);
         dialog.show();
         OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params)
@@ -381,7 +422,7 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
 
     private void getOrderData(final List<GenerateOrderBean.commoditys> list) {
         Map<String, String> params = new HashMap<>();
-        GenerateOrderBean generateOrderBean = new GenerateOrderBean("buyCommodity",uid,townId, list);
+        GenerateOrderBean generateOrderBean = new GenerateOrderBean("buyCommodity", uid, townId, list);
         String json = new Gson().toJson(generateOrderBean);
         params.put("json", json);
         Log.i("ShopDecActivity", "getdata: " + json);
@@ -393,6 +434,7 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                 ToastUtils.makeText(context, e.getMessage());
                 dialog.dismiss();
             }
+
             @Override
             public void onResponse(String response, int id) {
                 Log.i("ShopDecActivity", "onResponse: " + response);
@@ -423,7 +465,7 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
         Map<String, String> params = new HashMap<>();
         final String json = "{\"cmd\":\"addShopCar\",\"commodityid\":\"" + rotateid + "\",\"uid\":\"" + uid + "\"" +
                 ",\"commodityShooCarNum\":\"" + commodityShooCarNum + "\",\"commodityFirstParam\":\"" + commodityFirstParam + "\"" +
-                ",\"commoditySecondParam\":\"" + commoditySecondParam + "\",\"townId\":\""+townId+"\"}";
+                ",\"commoditySecondParam\":\"" + commoditySecondParam + "\",\"townId\":\"" + townId + "\"}";
         params.put("json", json);
         Log.i("ShopDecActivity", "response: " + json);
         dialog.show();
@@ -487,14 +529,14 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                     list = new ArrayList<>();
                     int commodityShooCarNum = Integer.parseInt(mNum.getText().toString().trim());
                     String num = String.valueOf(commodityShooCarNum);
-                    if (commodityShooCarNum > Integer.parseInt(mInventory)){
-                        ToastUtils.makeText(context,"该商品库存不足");
+                    if (commodityShooCarNum > Integer.parseInt(mInventory)) {
+                        ToastUtils.makeText(context, "该商品库存不足");
                         return;
                     }
                     if (flag == 0) {
                         GenerateOrderBean.commoditys comm = new GenerateOrderBean.commoditys(rotateid,
                                 mtitle, rotateIcon
-                                , commodityFirstParam, commoditySecondParam, commodityPrice, num,mShopUnit);
+                                , commodityFirstParam, commoditySecondParam, commodityPrice, num, mShopUnit);
                         list.add(comm);
                         getOrderData(list);
                         totalPrice = tempPrice * Integer.parseInt(mNum.getText().toString().trim());
@@ -510,13 +552,13 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                     list = new ArrayList<>();
                     int commodityShooCarNum = Integer.parseInt(mNum.getText().toString().trim());
                     String num = String.valueOf(commodityShooCarNum);
-                    if (commodityShooCarNum > Integer.parseInt(mInventory)){
-                        ToastUtils.makeText(context,"该商品库存不足");
+                    if (commodityShooCarNum > Integer.parseInt(mInventory)) {
+                        ToastUtils.makeText(context, "该商品库存不足");
                         return;
                     }
                     GenerateOrderBean.commoditys comm = new GenerateOrderBean.commoditys(rotateid,
                             mtitle, rotateIcon
-                            , commodityFirstParam, commoditySecondParam, commodityPrice, num,mShopUnit);
+                            , commodityFirstParam, commoditySecondParam, commodityPrice, num, mShopUnit);
                     list.add(comm);
                     getOrderData(list);
                     totalPrice = tempPrice * Integer.parseInt(mNum.getText().toString().trim());
@@ -527,8 +569,8 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                 @Override
                 public void onClick(View v) {
                     int commodityShooCarNum = Integer.parseInt(mNum.getText().toString().trim());
-                    if (commodityShooCarNum > Integer.parseInt(mInventory)){
-                        ToastUtils.makeText(context,"该商品库存不足");
+                    if (commodityShooCarNum > Integer.parseInt(mInventory)) {
+                        ToastUtils.makeText(context, "该商品库存不足");
                         return;
                     }
                     getAddShoppingCart(commodityShooCarNum, commodityFirstParam, commoditySecondParam);
@@ -547,17 +589,17 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                 public void onClick(View v) {
                     int temp = Integer.parseInt(mNum.getText().toString().trim());
                     if (TextUtils.isEmpty(maxBuyNum)) {
-                        if (Integer.parseInt(mInventory) > temp){
+                        if (Integer.parseInt(mInventory) > temp) {
                             temp++;
-                        }else {
-                            ToastUtils.makeText(ShopDecActivity.this,"库存不足");
+                        } else {
+                            ToastUtils.makeText(ShopDecActivity.this, "库存不足");
                         }
                     } else {
                         if (Integer.parseInt(maxBuyNum) > temp) {
-                            if (Integer.parseInt(mInventory) > temp){
+                            if (Integer.parseInt(mInventory) > temp) {
                                 temp++;
-                            }else {
-                                ToastUtils.makeText(ShopDecActivity.this,"库存不足");
+                            } else {
+                                ToastUtils.makeText(ShopDecActivity.this, "库存不足");
                             }
                         } else {
                             ToastUtils.makeText(ShopDecActivity.this, "您的可购买数量已达上限");
@@ -583,7 +625,6 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
             mTitle01 = view.findViewById(R.id.text_item_sku_second_title);
             mFlavor = view.findViewById(R.id.tf_first_flavor);
             mFlavor01 = view.findViewById(R.id.tf_second_flavor);
-
             //商品详情，图片 价格 库存
             mShopPicture = view.findViewById(R.id.iv_shop_picture1);
             mShopPrice = view.findViewById(R.id.text_sku_shop_price);
@@ -730,9 +771,9 @@ public class ShopDecActivity extends FragmentActivity implements View.OnClickLis
                     commodityPrice = skuBean.getCommodityNewPrice();
                     if (!TextUtils.isEmpty(skuBean.getCommodityNewPrice()))
                         tempPrice = Double.parseDouble(skuBean.getCommodityNewPrice());
-                    if (TextUtils.isEmpty(skuBean.getCommodityInventory())){
+                    if (TextUtils.isEmpty(skuBean.getCommodityInventory())) {
                         mInventory = "0";
-                    }else {
+                    } else {
                         mInventory = skuBean.getCommodityInventory();
                     }
                     mShopStock.setText("库存" + mInventory + "件");

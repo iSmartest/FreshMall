@@ -8,12 +8,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.lixin.freshmall.activity.MyCouponActivity;
+import com.lixin.freshmall.activity.MyMassageActivity;
 import com.lixin.freshmall.activity.MyOrderActivity;
 import com.lixin.freshmall.activity.OrderMoneyDecActivity;
 import com.lixin.freshmall.activity.RefundDecActivity;
 import com.lixin.freshmall.activity.ShopDecActivity;
-import com.lixin.freshmall.model.CommonLog;
 import com.lixin.freshmall.model.Constant;
+import com.lixin.freshmall.model.Receiver;
 import com.lixin.freshmall.uitls.SPUtil;
 
 import org.json.JSONException;
@@ -28,27 +29,39 @@ import cn.jpush.android.api.JPushInterface;
  */
 
 public class MyReceiver extends BroadcastReceiver {
-
+   private Receiver receiver ;
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
         Bundle bundle = intent.getExtras();
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
-            //send the Registration Id to your server...
             Log.i("MyReceiver", "接收Registration Id : " + regId);
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
-            //processCustomMessage(context, bundle);
             Constant.EXTRA = bundle.getString(JPushInterface.EXTRA_EXTRA);
             Log.i("sdfdf", "接收到推送下来的自定义消息: " + Constant.EXTRA);
+            receiver  = new Receiver();
+            String message = bundle.getString(JPushInterface.EXTRA_EXTRA);
+            receiver.setMsg(message);
+            String title = null;
+            try {
+                JSONObject obj = new JSONObject(message);
+                title = obj.getString("text");
+                receiver.setTitle(title);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Constant.mReceiver.add(receiver);
+            SPUtil.putList(context,"mReceiver", Constant.mReceiver);
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             System.out.println("[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             Log.i("MyReceiver", "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             System.out.println("[MyReceiver] 用户点击打开了通知");
-            openAppOrActivity(context, Constant.EXTRA);
-            Log.i("sdfdf", "onReceive: " + Constant.EXTRA);
+            String title = bundle.getString(JPushInterface.EXTRA_ALERT);
+            openAppOrActivity(context, title);
+            Log.i("sdfdf", "onReceive: " + title);
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
             //在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity， 打开一个网页等..
             Log.i("MyReceiver", "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
@@ -82,32 +95,41 @@ public class MyReceiver extends BroadcastReceiver {
     public static Intent parseJpushBundle(Context context, String extra) {
         Intent detailIntent = null;
         Log.i("sdfdf", "parseJpushBundle: " + extra);
-        if (!TextUtils.isEmpty(extra)){
-            JSONObject json = null;
-            try {
-                json = new JSONObject(extra);
-                int type = json.getInt("type");
-                if (type == 0){
-                    detailIntent = new Intent(context, MyCouponActivity.class);
-                }else if (type == 1){
-                    detailIntent = new Intent(context,ShopDecActivity.class);
-                    detailIntent.putExtra("rotateid", json.getString("id"))
-                            .putExtra("rotateIcon", "url");
-                }else if (type == 2){
-                    detailIntent = new Intent(context,RefundDecActivity.class);
-                    detailIntent.putExtra("orderId", json.getString("id"));
-                }else if (type == 3){
-                    detailIntent = new Intent(context,OrderMoneyDecActivity.class);
-                    detailIntent.putExtra("orderId", json.getString("id"));
-                }else if (type == 4){
-                    detailIntent = new Intent(context,MyOrderActivity.class);
-                    detailIntent.putExtra("currentItem", "1");
+        String type = null, id = null,url = null,text = null;
+        for (int i = 0; i < Constant.mReceiver.size(); i++) {
+            Receiver bean = Constant.mReceiver.get(i);
+                JSONObject obj = null;
+                try {
+                    obj = new JSONObject(bean.getMsg());
+                    type = obj.getString("type");
+                    id = obj.getString("id");
+                    url = obj.getString("url");
+                    text = obj.getString("text");
+                    if (text.equals(extra)){
+                        if (type.equals("0")){
+                            detailIntent = new Intent(context, MyCouponActivity.class);
+                        }else if (type.equals("1")){
+                            detailIntent = new Intent(context,ShopDecActivity.class);
+                            detailIntent.putExtra("rotateid",id)
+                                    .putExtra("rotateIcon",url);
+                        }else if (type.equals("2")){
+                            detailIntent = new Intent(context,RefundDecActivity.class);
+                            detailIntent.putExtra("orderId", id);
+                        }else if (type.equals("3")){
+                            detailIntent = new Intent(context,OrderMoneyDecActivity.class);
+                            detailIntent.putExtra("orderId", id);
+                        }else if (type.equals("4")){
+                            detailIntent = new Intent(context,MyOrderActivity.class);
+                            detailIntent.putExtra("currentItem", "1");
+                        }else {
+                            detailIntent = new Intent(context,MyMassageActivity.class);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                CommonLog.e(e);
-            }
-
         }
+
         return detailIntent;
     }
     public static boolean isLogin(Context context) {

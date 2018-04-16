@@ -1,5 +1,6 @@
 package com.lixin.freshmall.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,4 +28,9 @@ public class Constant {
     public static final String JPUSH_EXTRA = "jpush";
     public static String EXTRA = "extra";
     public static List<HomeBean.classifyBottom> mClassifyBottom;
+    public static List<Receiver> mReceiver = new ArrayList<>();
+    //充值协议
+    public static String PROTOCOL = "http://47.100.98.32/freshshop/aboutus/disPlayDetail?id=3";
+    //注册协议
+    public static String REGISTER = "http://47.100.98.32/freshshop/aboutus/disPlayDetail?id=2";
 }

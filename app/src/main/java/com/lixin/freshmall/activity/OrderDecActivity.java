@@ -44,13 +44,12 @@ import okhttp3.Call;
  */
 
 public class OrderDecActivity extends BaseActivity {
-    private String uid, orderState, orderId, totalPrice, giveChange,payTime;
+    private String uid, orderState, orderId, totalPrice, giveChange, payTime;
     private ListView order_dec_list;
     private TextView mOrderTotalPrice, mCancel, mPay;
-    private LinearLayout LyActualTime, LyPlaceOrderTime, LyPayMethod, LyFoot,LyFree;
+    private LinearLayout LyActualTime, LyPlaceOrderTime, LyPayMethod, LyFoot, LyFree;
     private TextView mOrderNum, mOrderState, mStoreName, mStorePhone, mStoreAddress, mPlaceOrderTime,
-            mReservationDate, mReservatioTime, mActualTime, mShoppingBag, mCoupon, mPayMethod, mAddressType
-            ,mSendFree,mDataText,mTimeText,mActualTimeText;
+            mReservationDate, mReservatioTime, mActualTime, mShoppingBag, mCoupon, mPayMethod, mAddressType, mSendFree, mDataText, mTimeText, mActualTimeText;
     private TextView mGiveChange, mRealMoney;
     private View headView, footView;
     private OrderDecAdapter mAdapter;
@@ -59,6 +58,7 @@ public class OrderDecActivity extends BaseActivity {
     private List<OrderDec.OrderDetailed> orderDetailedList;
     private int nowPage = 1;
     private LogOutDialog mLogOutDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,7 +179,7 @@ public class OrderDecActivity extends BaseActivity {
                 }
                 List<OrderDec.Commoditys> commoditys = orderDec.getCommoditys();
                 List<OrderDec.OrderDetailed> orderDetaileds = orderDec.getOrderDetailed();
-                if (orderDec.getStype().equals("0")){
+                if (orderDec.getStype().equals("0")) {
                     mAddressType.setText("取货地址");
                     LyFree.setVisibility(View.GONE);
                     mStoreName.setText("【" + orderDec.getGetGoodsStore() + "】");
@@ -189,13 +189,13 @@ public class OrderDecActivity extends BaseActivity {
                     mDataText.setText("预约取货日期");
                     mTimeText.setText("预约取货时间");
                     mActualTimeText.setText("实际取货时间");
-                }else {
+                } else {
                     mAddressType.setText("收货地址");
                     LyFree.setVisibility(View.VISIBLE);
                     mStoreName.setText("【" + orderDec.getUserName() + "】");
                     mStorePhone.setText(orderDec.getPhone());
                     mStoreAddress.setText(orderDec.getAddress());
-                    mSendFree.setText(orderDec.getSendMoney()+"元");
+                    mSendFree.setText(orderDec.getSendMoney() + "元");
                     mDataText.setText("预约收货日期");
                     mTimeText.setText("预约收货时间");
                     mActualTimeText.setText("实际收货时间");
@@ -255,10 +255,10 @@ public class OrderDecActivity extends BaseActivity {
                         getCancelOrder(orderId, cancel);
                         break;
                     case "2":
-                        initData(orderId,totalPrice,payTime);
+                        initData(orderId, totalPrice, payTime);
                         break;
                     case "3":
-                        mLogOutDialog = new LogOutDialog(context, "确定删除订单吗？","取消","确定",new LogOutDialog.OnSureBtnClickListener() {
+                        mLogOutDialog = new LogOutDialog(context, "确定删除订单吗？", "取消", "确定", new LogOutDialog.OnSureBtnClickListener() {
                             @Override
                             public void sure() {
                                 mLogOutDialog.dismiss();
@@ -269,7 +269,7 @@ public class OrderDecActivity extends BaseActivity {
                         mLogOutDialog.show();
                         break;
                     case "5":
-                        initData(orderId,totalPrice,payTime);
+                        initData(orderId, totalPrice, payTime);
                         break;
                     default:
                         break;
@@ -354,8 +354,6 @@ public class OrderDecActivity extends BaseActivity {
                             , commoditys.getCommodityFirstParameter(), commoditys.getCommoditySecondParameter(), commoditys.getCommodityNewPrice(), commoditys.getCommodityBuyNum(), commoditys.getCommodityUnit());
                     list.add(comm);
                 }
-                SPUtil.putString(context, "mATime", myWelletBean.getSendAtmTime());
-                SPUtil.putString(context, "mPTime", myWelletBean.getSendPtmTime());
                 String mMoney = myWelletBean.getTotalMoney();
                 Intent intent = new Intent(context, NowBuyActivity.class);
                 Bundle bundle = new Bundle();
@@ -369,47 +367,47 @@ public class OrderDecActivity extends BaseActivity {
         });
     }
 
-    private void initData(final String orderId, final String totalPrice,final String paytime) {
-        String storeId = SPUtil.getString(context,"storeId");
-        Map<String,String> params = new HashMap<>();
-        String json = "{\"cmd\":\"getStoreInfoTime\",\"storeId\":\""+storeId+"\"}";
-        params.put("json",json);
+    private void initData(final String orderId, final String totalPrice, final String paytime) {
+        String storeId = SPUtil.getString(context, "storeId");
+        Map<String, String> params = new HashMap<>();
+        String json = "{\"cmd\":\"getStoreInfoTime\",\"storeId\":\"" + storeId + "\"}";
+        params.put("json", json);
         OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
-                ToastUtils.makeText(context,e.getMessage());
+                ToastUtils.makeText(context, e.getMessage());
             }
+
             @Override
             public void onResponse(String response, int id) {
-                Log.i("getStoreInfoTime", "onResponse: " +response );
+                Log.i("getStoreInfoTime", "onResponse: " + response);
                 Gson gson = new Gson();
-                StoreTimeBean storeTimeBean = gson.fromJson(response,StoreTimeBean.class);
-                if (storeTimeBean.getResult().equals("1")){
-                    ToastUtils.makeText(context,storeTimeBean.getResultNote());
+                StoreTimeBean storeTimeBean = gson.fromJson(response, StoreTimeBean.class);
+                if (storeTimeBean.getResult().equals("1")) {
+                    ToastUtils.makeText(context, storeTimeBean.getResultNote());
                     return;
                 }
                 int storeEndTime = storeTimeBean.getStoreEndTime();
-
                 Date date = new Date();//取时间
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(date);
                 date = calendar.getTime(); //这个时间就是日期往后推一天的结果
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 String dateString = formatter.format(date);
-                if (dateString.equals(paytime)){
+                if (dateString.equals(paytime)) {
                     int currentTime = calendar.get(Calendar.HOUR_OF_DAY);
-                    if (currentTime >= storeEndTime){
-                        ToastUtils.makeText(context,"已过截止时间，不能退单了");
+                    if (currentTime >= storeEndTime) {
+                        ToastUtils.makeText(context, "已过截止时间，不能退单了");
                     } else {
-                        Intent intent = new Intent(context,WantRefundActivity.class);
+                        Intent intent = new Intent(context, WantRefundActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putString("orderId",orderId);
-                        bundle.putString("totalPrice",totalPrice);
+                        bundle.putString("orderId", orderId);
+                        bundle.putString("totalPrice", totalPrice);
                         intent.putExtras(bundle);
                         context.startActivity(intent);
                     }
-                }else {
-                    ToastUtils.makeText(context,"已过截止时间，不能退单了");
+                } else {
+                    ToastUtils.makeText(context, "已过截止时间，不能退单了");
                 }
             }
         });

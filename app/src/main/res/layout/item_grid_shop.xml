@@ -1,73 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
         android:background="@color/app_main_default"
+        android:gravity="center"
+        android:orientation="vertical"
         android:padding="6dp">
+
         <RelativeLayout
             android:layout_width="140dp"
             android:layout_height="140dp">
+
             <ImageView
                 android:id="@+id/ima_grid_shop_picture"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_centerInParent="true"
+                android:contentDescription="@string/empty_icon"
                 android:scaleType="fitXY"
-                android:src="@drawable/image_fail_empty"
-                android:contentDescription="@string/empty_icon"/>
+                android:src="@drawable/image_fail_empty" />
+
             <TextView
                 android:id="@+id/tv_sale_state"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="已售罄"
-                android:layout_margin="4dp"
-                android:gravity="center"
-                android:textSize="12dp"
-                android:textColor="@color/app_main_default"
-                android:background="@drawable/shape_text_shadow"
                 android:layout_alignParentRight="true"
-                android:visibility="gone"/>
+                android:layout_margin="4dp"
+                android:background="@drawable/shape_text_shadow"
+                android:gravity="center"
+                android:text="已售罄"
+                android:textColor="@color/app_main_default"
+                android:textSize="12dp"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/text_grid_shop_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
                 android:ellipsize="end"
+                android:gravity="center"
                 android:singleLine="true"
                 android:textColor="@color/text_color_default"
-                android:gravity="center"/>
+                android:textSize="14sp" />
+
             <TextView
                 android:id="@+id/text_grid_shop_now_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:gravity="center"
                 android:textColor="@color/text_price_color"
-                android:gravity="center"/>
+                android:textSize="13sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/text_grid_shop_market_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="8sp"
                     android:gravity="center"
-                    android:textColor="@color/text_color_subtitle"/>
+                    android:textColor="@color/text_color_subtitle"
+                    android:textSize="8sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

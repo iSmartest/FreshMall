@@ -1,12 +1,15 @@
 package com.lixin.freshmall.fragment;
 
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +25,14 @@ import android.widget.TextView;
 import com.example.xrecyclerview.XRecyclerView;
 import com.google.gson.Gson;
 import com.lixin.freshmall.R;
-import com.lixin.freshmall.model.ClassBean;
 import com.lixin.freshmall.activity.MyApplication;
 import com.lixin.freshmall.activity.SearchShopActivity;
 import com.lixin.freshmall.activity.ShopDecActivity;
 import com.lixin.freshmall.adapter.FirstAdapter;
 import com.lixin.freshmall.adapter.SecondAdapter;
+import com.lixin.freshmall.dialog.ProgressDialog;
 import com.lixin.freshmall.listenter.RecyclerItemTouchListener;
+import com.lixin.freshmall.model.ClassBean;
 import com.lixin.freshmall.model.Constant;
 import com.lixin.freshmall.model.HomeBean;
 import com.lixin.freshmall.okhttp.OkHttpUtils;
@@ -54,96 +58,75 @@ public class ClassifyFragment extends BaseFragment {
     private View view;
     private EditText keySearch;
     private ImageView mSearch;
-    private int defClass1;
-    private ListView firstList;
+    private ListView first_list;
     private FirstAdapter firstAdapter;
     private SecondAdapter secondAdapter;
-    private XRecyclerView secondList;
-    private int nowPage = 1;
+    private XRecyclerView second_list;
+    private int nowPage = 1,totalPage = 1;
+    private int defaultItem = 0;
     private List<HomeBean.classifyBottom> mFirstList = new ArrayList<>();
     private List<ClassBean.Commoditys> mSecondList;
-    private String uid,TownId,meunid;
+    private String TownId,meunid;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.lixin.freshmall.classify.change");
+        getActivity().registerReceiver(mAllBroad, intentFilter);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_class,container,false);
-        if (Constant.mClassifyBottom != null && !Constant.mClassifyBottom.isEmpty()){
+        if (Constant.mClassifyBottom != null && !Constant.mClassifyBottom.isEmpty() && Constant.mClassifyBottom.size()>0){
             mFirstList.addAll(Constant.mClassifyBottom);
-            meunid = mFirstList.get(MyApplication.secondId).getMeunid();
+            meunid = mFirstList.get(MyApplication.defaultItem).getMeunid();
         }
         mSecondList = new ArrayList<>();
-        uid = SPUtil.getString(context,"uid");
         TownId = SPUtil.getString(context,"TownId");
         initView();
-        getdata();
+        getdata(true);
         return view;
     }
 
-    private void getdata() {
+    private void getdata(boolean isShowDialog) {
+        final Dialog progressDialog = ProgressDialog.createLoadingDialog(context, "加载中.....");
         Map<String, String> params = new HashMap<>();
         final String json="{\"cmd\":\"getClassifyListInfo\",\"city\":\"" + TownId +"\",\"meunid\":\""
                 + meunid + "\",\"nowPage\":\"" + nowPage + "\"}";
         params.put("json", json);
-        Log.i("getClassifyListInfo", "getdata: " + json);
-        dialog.show();
-        OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params)
-                .build().execute(new StringCallback() {
+        if (isShowDialog){
+            progressDialog.show();
+        }
+        OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 ToastUtils.makeText(context, e.getMessage());
-                dialog.dismiss();
-                secondList.refreshComplete();
+                progressDialog.dismiss();
+                second_list.refreshComplete();
             }
             @Override
             public void onResponse(String response, int id) {
-                Log.i("getClassifyListInfo", "getdata: " + response);
                 Gson gson = new Gson();
-                dialog.dismiss();
+                progressDialog.dismiss();
                 ClassBean mClassBean = gson.fromJson(response, ClassBean.class);
                 if (mClassBean.getResult().equals("1")) {
                     ToastUtils.makeText(context, mClassBean.getResultNote());
                     return;
                 }
+                totalPage = mClassBean.getTotalPage();
                 List<ClassBean.Commoditys> mCommoditys = mClassBean.getCommoditys();
-                mSecondList.addAll(mCommoditys);
-                secondAdapter.notifyDataSetChanged();
-                secondList.refreshComplete();
-                if (mClassBean.getTotalPage() < nowPage) {
-                    ToastUtils.makeText(context, "没有更多了");
-                    secondList.noMoreLoading();
-                    return;
+                if (mCommoditys != null && !mCommoditys.isEmpty() && mCommoditys.size() > 0){
+                    mSecondList.addAll(mCommoditys);
+                    secondAdapter.notifyDataSetChanged();
+                    second_list.refreshComplete();
                 }
             }
         });
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            if (MyApplication.temp == 1){
-                if (mFirstList !=null && !mFirstList.isEmpty()) {
-                    defClass1 = MyApplication.secondId;
-                    firstAdapter.setDefSelect(defClass1);
-                    nowPage = 1;
-                    mSecondList.clear();
-                    secondAdapter.notifyDataSetChanged();
-                    meunid = mFirstList.get(defClass1).getMeunid();
-                    getdata();
-                }
-                MyApplication.temp = 0;
-            }
-            if (mFirstList != null && !mFirstList.isEmpty()){
-                return;
-            }else {
-                if (Constant.mClassifyBottom != null && !Constant.mClassifyBottom.isEmpty()){
-                    mFirstList.addAll(Constant.mClassifyBottom);
-                    firstAdapter.notifyDataSetChanged();
-                    meunid = mFirstList.get(MyApplication.secondId).getMeunid();
-                    getdata();
-                }
-            }
-        }
-    }
     private void initView() {
         RelativeLayout mToolbar = view.findViewById(R.id.rl_class_toolbar);
         StatusBarUtil.setHeightAndPadding(getActivity(), mToolbar);
@@ -177,49 +160,49 @@ public class ClassifyFragment extends BaseFragment {
                 }
             }
         });
-        firstList = view.findViewById(R.id.first_list);
-        firstList.setVerticalScrollBarEnabled(false);
+        first_list = view.findViewById(R.id.first_list);
+        first_list.setVerticalScrollBarEnabled(false);
         firstAdapter = new FirstAdapter(context,mFirstList);
-        firstAdapter.setDefSelect(MyApplication.secondId);
+        firstAdapter.setDefSelect(MyApplication.defaultItem);
         firstAdapter.notifyDataSetChanged();
-        firstList.setAdapter(firstAdapter);
-        firstList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        first_list.setAdapter(firstAdapter);
+        first_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 firstAdapter.setDefSelect(position);
-                MyApplication.secondId = position;
+                meunid = mFirstList.get(position).getMeunid();
                 firstAdapter.notifyDataSetChanged();
                 nowPage = 1;
-                meunid = mFirstList.get(position).getMeunid();
                 mSecondList.clear();
                 secondAdapter.notifyDataSetChanged();
-                getdata();
-                secondList.refreshComplete();
+                getdata(true);
             }
         });
-        secondList = view.findViewById(R.id.second_list);
-        secondList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        secondList.setLoadingListener(new XRecyclerView.LoadingListener() {
+        second_list = view.findViewById(R.id.second_list);
+        second_list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        secondAdapter = new SecondAdapter(context,mSecondList);
+        second_list.setAdapter(secondAdapter);
+        second_list.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 nowPage = 1;
                 mSecondList.clear();
                 secondAdapter.notifyDataSetChanged();
-                getdata();
-                secondList.refreshComplete();
+                getdata(false);
             }
 
             @Override
             public void onLoadMore() {
                 nowPage++;
-                getdata();
-                secondAdapter.notifyDataSetChanged();
-                secondList.refreshComplete();
+                if (totalPage < nowPage) {
+                    ToastUtils.makeText(context, "没有更多了");
+                    second_list.noMoreLoading();
+                    return;
+                }
+                getdata(false);
             }
         });
-        secondAdapter = new SecondAdapter(context,mSecondList);
-        secondList.setAdapter(secondAdapter);
-        secondList.addOnItemTouchListener(new RecyclerItemTouchListener(secondList) {
+        second_list.addOnItemTouchListener(new RecyclerItemTouchListener(second_list) {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh) {
                 int position = vh.getAdapterPosition() - 1;
@@ -232,5 +215,25 @@ public class ClassifyFragment extends BaseFragment {
                 MyApplication.openActivity(context,ShopDecActivity.class,bundle);
             }
         });
+    }
+
+    private BroadcastReceiver mAllBroad = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            defaultItem = intent.getIntExtra("position",0);
+            firstAdapter.setDefSelect(defaultItem);
+            meunid = mFirstList.get(defaultItem).getMeunid();
+            firstAdapter.notifyDataSetChanged();
+            nowPage = 1;
+            mSecondList.clear();
+            secondAdapter.notifyDataSetChanged();
+            getdata(true);
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(mAllBroad);
     }
 }

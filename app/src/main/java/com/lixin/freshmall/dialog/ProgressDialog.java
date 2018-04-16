@@ -56,7 +56,5 @@ public class ProgressDialog {
                 LinearLayout.LayoutParams.WRAP_CONTENT));// 设置布局
 
         return loadingDialog;
-
     }
-
 }

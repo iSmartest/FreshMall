@@ -50,7 +50,7 @@
             android:text="更多>>"
             android:gravity="center"
             android:layout_marginLeft="4dp"
-            android:textColor="@color/text_color_subtitle"
+            android:textColor="@color/text_price_color"
             android:textSize="10sp" />
     </LinearLayout>
     <include layout="@layout/v_horizontal_line" />

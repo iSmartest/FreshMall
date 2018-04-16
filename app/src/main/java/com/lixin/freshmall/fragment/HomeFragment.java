@@ -77,11 +77,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private CallBackValue callBackValue;
     private int totalPage; //总的页数
     private int mPageSize = 8; //每页显示的最大的数量
+    private int isAgain = 1;
     private ImageView[] ivPoints;//小圆点图片的集合
     private List<View> viewPagerList;//GridView作为一个View对象添加到ViewPager集合中
     private int dotSize = 20;
     private int dotSpace = 30;
-    private String TownId ,Town,StoreName;
+    private String TownId, Town, StoreName;
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -92,14 +93,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frgment_home, container, false);
-        TownId = SPUtil.getString(context,"TownId");
-        Town = SPUtil.getString(context,"Town");
-        StoreName = SPUtil.getString(context,"storeName");
+        TownId = SPUtil.getString(context, "TownId");
+        Town = SPUtil.getString(context, "Town");
+        StoreName = SPUtil.getString(context, "storeName");
         rotateTopList = new ArrayList<>();
         mList = new ArrayList<>();
         classifyBottomList = new ArrayList<>();
         initView();
-        getdata();
+        getdata(true);
         return view;
 
     }
@@ -107,8 +108,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private void initView() {
         RelativeLayout mToolbar = view.findViewById(R.id.rl_home_toolbar);
         StatusBarUtil.setHeightAndPadding(getActivity(), mToolbar);
-        ((TextView)view.findViewById(R.id.text_home_city_location)).setText(Town);
-        ((TextView)view.findViewById(R.id.text_home_store_name)).setText(StoreName);
+        ((TextView) view.findViewById(R.id.text_home_city_location)).setText(Town);
+        ((TextView) view.findViewById(R.id.text_home_store_name)).setText(StoreName);
         view.findViewById(R.id.ly_home_left).setOnClickListener(this);
         view.findViewById(R.id.im_home_search).setOnClickListener(this);
         view.findViewById(R.id.Iv_home_message).setOnClickListener(this);
@@ -136,16 +137,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         mSlideshow01.setOnBannerClickListener(this);
         viewPager = headView.findViewById(R.id.home_viewpager);
         group = headView.findViewById(R.id.home_points);
-        if (headView != null){
+        if (headView != null) {
             home_list.addHeaderView(headView);
         }
-        mAdapter = new HomeAdapter(context,mList);
+        mAdapter = new HomeAdapter(context, mList);
         home_list.setAdapter(mAdapter);
         home_list.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 mList.clear();
-                getdata();
+                rotateTopList.clear();
+                getdata(false);
                 mAdapter.notifyDataSetChanged();
                 home_list.refreshComplete();
             }
@@ -155,18 +157,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 home_list.noMoreLoading();
                 home_list.refreshComplete();
                 return;
-
             }
         });
     }
 
-    private void getdata() {
+    private void getdata(boolean isShowDialog) {
         Map<String, String> params = new HashMap<>();
-        final String json = "{\"cmd\":\"getMianCommoditysInfo\",\"city\":\""+TownId+"\"}";
+        final String json = "{\"cmd\":\"getMianCommoditysInfo\",\"city\":\"" + TownId + "\"}";
         params.put("json", json);
-        dialog.show();
-        OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params)
-                .build().execute(new StringCallback() {
+        if (isShowDialog) {
+            dialog.show();
+        }
+        OkHttpUtils.post().url(Constant.THE_SERVER_URL).params(params).build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 ToastUtils.makeText(context, "网络异常");
@@ -183,14 +185,20 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                     ToastUtils.makeText(getActivity(), homeBean.getResultNote());
                 }
                 List<HomeBean.rotateTopCommoditys> rotateTopCommoditys = homeBean.getRotateTopCommoditys();//顶部轮播图集合
-                rotateTopList.addAll(rotateTopCommoditys);
-                initTopViewData(rotateTopList);
+                if (rotateTopCommoditys != null && !rotateTopCommoditys.isEmpty() && rotateTopCommoditys.size() > 0) {
+                    rotateTopList.addAll(rotateTopCommoditys);
+                    initTopViewData(rotateTopList);
+                }
                 List<HomeBean.classifyBottom> classifyBottom = homeBean.getClassifyBottom();//类别
-                classifyBottomList.addAll(classifyBottom);
-                Constant.mClassifyBottom = classifyBottomList;
-                initData(classifyBottom);
+                if (classifyBottom != null && !classifyBottom.isEmpty() && classifyBottom.size() > 0) {
+                    if (isAgain == 1) {
+                        classifyBottomList.addAll(classifyBottom);
+                        Constant.mClassifyBottom = classifyBottomList;
+                        initData(classifyBottomList);
+                    }
+                }
                 List<HomeBean.ThemeList> themeLists = homeBean.getThemeList();
-                if (themeLists != null && !themeLists.isEmpty() && themeLists.size() > 0){
+                if (themeLists != null && !themeLists.isEmpty() && themeLists.size() > 0) {
                     mList.addAll(themeLists);
                     mAdapter.notifyDataSetChanged();
                 }
@@ -207,11 +215,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         mSlideshow01.setImages(imag)
                 .setBannerStyle(BannerConfig.CIRCLE_INDICATOR)
                 .setImageLoader(new GlideImageLoader())
+                .setDelayTime(5000)
                 .start();
     }
 
     // 类别展示
     private void initData(List<HomeBean.classifyBottom> classifyBottomList) {
+        isAgain = 2;
         totalPage = (int) Math.ceil(classifyBottomList.size() * 1.0 / mPageSize);
         viewPagerList = new ArrayList<>();
         for (int i = 0; i < totalPage; i++) {
@@ -269,7 +279,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                 MyApplication.openActivity(context, SelectProvinceActivity.class);
                 break;
             case R.id.Iv_home_message:
-                if (TextUtils.isEmpty(SPUtil.getString(context,"uid"))) {
+                if (TextUtils.isEmpty(SPUtil.getString(context, "uid"))) {
                     MyApplication.openActivity(getActivity(), LoginActivity.class);
                 } else {
                     MyApplication.openActivity(getActivity(), MyMassageActivity.class);
@@ -284,7 +294,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
                     startActivity(intent6);
                 }
                 break;
-
             case R.id.linear_shop_hot:
                 Intent intent1 = new Intent(getActivity(), MoreShopActivity.class);
                 intent1.putExtra("flag", "1");
@@ -297,16 +306,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void OnBannerClick(int position) {
-        int type = rotateTopList.get(position-1).getRotateType();
+        int type = rotateTopList.get(position - 1).getRotateType();
         if (type == 0) {
             Intent intent = new Intent(context, KnowLedgeWebActivity.class);
-            intent.putExtra(KnowLedgeWebActivity.TITLE,"活动详情");
-            intent.putExtra(KnowLedgeWebActivity.URL, rotateTopList.get(position-1).getRotateid());
+            intent.putExtra(KnowLedgeWebActivity.TITLE, "活动详情");
+            intent.putExtra(KnowLedgeWebActivity.URL, rotateTopList.get(position - 1).getRotateid());
             startActivity(intent);
         } else if (type == 1) {
             Intent intent = new Intent(context, ShopDecActivity.class);
-            intent.putExtra("rotateid", rotateTopList.get(position-1).getRotateid());
-            intent.putExtra("rotateIcon", rotateTopList.get(position-1).getRotateIcon());
+            intent.putExtra("rotateid", rotateTopList.get(position - 1).getRotateid());
+            intent.putExtra("rotateIcon", rotateTopList.get(position - 1).getRotateIcon());
             startActivity(intent);
         }
     }
@@ -321,7 +330,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             if (rotateTopList.isEmpty()) {
                 if (Utils.isNetworkAvailable(getActivity())) {
-                    getdata();
+                    getdata(true);
                 } else {
                     ToastUtils.makeText(getActivity(), "呀！网络跑丢了！");
                 }

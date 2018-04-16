@@ -23,9 +23,10 @@ import java.util.List;
  * My mailbox is 1403241630@qq.com
  */
 
-public class HomeHotGridAdapter extends BaseAdapter{
+public class HomeHotGridAdapter extends BaseAdapter {
     private Context context;
     private List<HomeBean.ThemeList.CommodityList> commodityList;
+
     public HomeHotGridAdapter(Context context, List<HomeBean.ThemeList.CommodityList> commodityList) {
         this.context = context;
         this.commodityList = commodityList;
@@ -49,8 +50,8 @@ public class HomeHotGridAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
-        if (convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_grid_shop,null);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_grid_shop, null);
             viewHolder = new ViewHolder();
             viewHolder.mPicture = convertView.findViewById(R.id.ima_grid_shop_picture);
             viewHolder.mShopName = convertView.findViewById(R.id.text_grid_shop_name);
@@ -58,30 +59,31 @@ public class HomeHotGridAdapter extends BaseAdapter{
             viewHolder.mMarketPrice = convertView.findViewById(R.id.text_grid_shop_market_price);
             viewHolder.mSaleState = convertView.findViewById(R.id.tv_sale_state);
             convertView.setTag(viewHolder);
-        }else {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         HomeBean.ThemeList.CommodityList mList = commodityList.get(position);
         viewHolder.mShopName.setText(mList.getCommodityTitle());
         viewHolder.mNowPrice.setText(mList.getCommodityNewPrice() + "元/" + mList.getCommodityUnit());
-        viewHolder.mMarketPrice.setText("市场价:" + mList.getCommodityOriginalPrice() + "元/" + mList.getCommodityNewPrice());
+        viewHolder.mMarketPrice.setText("市场价:" + mList.getCommodityOriginalPrice() + "元/" + mList.getCommodityUnit());
         String img = mList.getCommodityIcon();
-        if (TextUtils.isEmpty(img)){
+        if (TextUtils.isEmpty(img)) {
             viewHolder.mPicture.setImageResource(R.drawable.image_fail_empty);
-        }else {
+        } else {
             ImageManagerUtils.imageLoader.displayImage(img, viewHolder.mPicture, ImageManagerUtils.options3);
         }
-        viewHolder.mMarketPrice.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
-        if (mList.getIsSoldOut().equals("1")){
+        viewHolder.mMarketPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+        if (mList.getIsSoldOut().equals("1")) {
             viewHolder.mSaleState.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             viewHolder.mSaleState.setVisibility(View.GONE);
         }
         return convertView;
     }
-    class ViewHolder{
+
+    class ViewHolder {
         ImageView mPicture;
-        TextView mShopName,mNowPrice,mMarketPrice,mSaleState;
+        TextView mShopName, mNowPrice, mMarketPrice, mSaleState;
 
     }
 }
